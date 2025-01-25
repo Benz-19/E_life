@@ -1,0 +1,36 @@
+.my-card {
+    transition: all 0.6s;
+}
+
+.my-card:hover {
+    transform: translateY(-10%);
+}
+
+.mx-card {
+    transition: all 0.6s;
+}
+
+.mx-card:hover {
+    transform: translateX(10%);
+}
+
+
+/* Keyframes for bouncing animation */
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+}
