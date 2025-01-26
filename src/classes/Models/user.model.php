@@ -64,39 +64,68 @@ class User extends Database
     }
 
 
-    public function createUserDetailGoogle($userName, $userEmail, $userPassword, $user_is_verified, $user_verification_code, $user_google_id)
+    public function createUserDetailGoogle($userName, $userEmail, $user_is_verified, $user_verification_code, $user_google_id)
     {
-
-        // validate the username
-        if (preg_match('/\A\w+\Z/', $userName) !== 1) {
-            echo handle_error("Invalid username format. Avoid using special characters.");
-            return false;
-        }
-
-
         $this->userName = $userName;
         $this->userEmail = $userEmail;
-        $this->userPassword = $userPassword;
-        $this->user_google_id = $user_google_id;
         $this->user_is_verified = $user_is_verified;
         $this->user_verification_code = $user_verification_code;
-
+        $this->user_google_id = $user_google_id;
 
         try {
-            $sql = "INSERT INTO users (name, email, password, is_verified, verification_code, google_id) VALUES (:name, :email, :password,:is_verified,:verification_code, :google_id)";
+            $sql = "INSERT INTO users (name, email, google_id, is_verified, verification_code) VALUES (:name, :email, :google_id, :is_verified, :verification_code)";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
                 ':name' => $this->userName,
                 ':email' => $this->userEmail,
-                ':password' => $this->userPassword,
+                ':google_id' => $this->user_google_id,
                 ':is_verified' => $this->user_is_verified,
-                ':verification_code' => $this->user_verification_code,
-                ':google_id' => $this->user_google_id
+                ':verification_code' => $this->user_verification_code
             ]);
-            echo "Successfully populated the db using the google signup";
+            echo "User created successfully";
+            return true;
         } catch (PDOException $error) {
-            echo handle_error("Failed to populate the db using the google signup: ") . $error->getMessage();
+            echo handle_error("Failed to create user: " . $error->getMessage());
+            return false;
         }
+    }
+
+    public function getUserByGoogleId($google_id)
+    {
+        try {
+            $sql = "SELECT * FROM users WHERE google_id = :google_id";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([':google_id' => $google_id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $error) {
+            echo handle_error("Failed to retrieve user: " . $error->getMessage());
+            return false;
+        }
+    }
+
+    public function updateUserDetailGoogle($userId, $name, $email, $google_verified, $google_verification_code)
+    {
+        try {
+            $sql = "UPDATE users SET name = :name, email = :email, is_verified = :is_verified, verification_code = :verification_code WHERE id = :id";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([
+                ':name' => $name,
+                ':email' => $email,
+                ':is_verified' => $google_verified,
+                ':verification_code' => $google_verification_code,
+                ':id' => $userId
+            ]);
+            echo "User updated successfully";
+            return true;
+        } catch (PDOException $error) {
+            echo handle_error("Failed to update user: " . $error->getMessage());
+            return false;
+        }
+    }
+
+    public function getLastInsertId()
+    {
+        return $this->Connection()->lastInsertId();
     }
 
     // user authentication
@@ -113,8 +142,10 @@ class User extends Database
             ]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+            // var_dump($user);
+
             if ($user) {
-                $passwordCheck = password_verify($this->userPassword, $user['password']) || $this->userPassword == $user['password'] ? true : false;
+                $passwordCheck = password_verify($this->userPassword, $user['password']) || $this->userPassword === $user['password'] ? true : false;
                 if ($passwordCheck) {
                     echo "User authenticated";
                     return true;

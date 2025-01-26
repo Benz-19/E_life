@@ -85,6 +85,34 @@
                 text-align: center;
             }
         }
+
+        .social-button {
+            background: none;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            display: inline-block;
+            font-size: inherit;
+            color: inherit;
+        }
+
+        .social-button i {
+            font-size: 24px;
+            color: #3b5998;
+        }
+
+        .social-button[name="google-sign-in-btn"] i {
+            color: #db4437;
+        }
+
+        .social-button[name="linkedin-sign-in-btn"] i {
+            color: #0077b5;
+        }
+
+        /* Ensures the buttons do not affect the layout */
+        .social-button:focus {
+            outline: none;
+        }
     </style>
 </head>
 
@@ -95,9 +123,15 @@
             <form action="#" method="POST">
                 <h1>Create Account</h1>
                 <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                    <button type="submit" name="facebook-sign-in-btn" class="social-button">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button type="submit" name="google-sign-in-btn" class="social-button">
+                        <i class="fab fa-google-plus-g"></i>
+                    </button>
+                    <button type="submit" name="linkedin-sign-in-btn" class="social-button">
+                        <i class="fab fa-linkedin-in"></i>
+                    </button>
                 </div>
                 <span>or use your email for registration</span>
                 <div class="infield">
@@ -120,9 +154,15 @@
             <form action="" method="POST">
                 <h1>Sign in</h1>
                 <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                    <button type="submit" name="facebook-sign-in-btn" class="social-button">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button type="submit" name="google-sign-in-btn" class="social-button">
+                        <i class="fab fa-google-plus-g"></i>
+                    </button>
+                    <button type="submit" name="linkedin-sign-in-btn" class="social-button">
+                        <i class="fab fa-linkedin-in"></i>
+                    </button>
                 </div>
                 <span>or use your account</span>
                 <div class="infield">
@@ -169,23 +209,15 @@
 
 require __DIR__ . "/../vendor/autoload.php";
 include_once __DIR__ . "/../src/handle_error/handle_error.php";
+include_once __DIR__ . "/../src/classes/View/auth/login.auth.php";
+
 
 // Sign in
 if (isset($_POST['sign-in-btn'])) {
     $email = $_POST['signInEmail'];
     $password = $_POST['signInPassword'];
 
-    if (empty($email) && empty($password)) {
-        echo "Ensure all fields are filled!";
-    } else {
-        $user = new Patient; //creating a new patient
-
-        if ($user->authenticateUser($email, $password)) {
-            echo '<script type="text/javascript">window.location.href = "yes.php";</script>';
-        } else {
-            echo "<br>" . handle_error("Failed to authenticate the user");
-        }
-    }
+    userSignIn($email, $password); //function to sign in
 }
 
 // Sign up
@@ -194,16 +226,12 @@ if (isset($_POST['sign-up-btn'])) {
     $fullName = $_POST['signUpFullName'];
     $password = $_POST['signUpPassword'];
 
-    if (empty($fullName) && empty($email) && empty($password)) {
-        echo "Ensure all fields are filled!";
-    } else {
-        $user = new Patient; //creating a new patient
-
-        if ($user->createUserDetail($fullName, $email, $password)) {
-            echo '<script type="text/javascript">window.location.href = "yes.php";</script>';
-        } else {
-            echo "<br>" . handle_error("Failed to store your details...") . "Try again!";
-        }
-    }
+    userSignUp($email, $password, $fullName); //function to sign up
 }
+
+// Google Auth
+if (isset($_POST['google-sign-in-btn'])) {
+    userSignInGoogle();
+}
+
 ?>
