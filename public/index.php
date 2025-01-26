@@ -15,7 +15,7 @@
     <!-- Bootstrap -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
     <!-- css stylesheet -->
-    <link rel="stylesheet" href="public/css/index.css">
+    <link rel="stylesheet" href="css/index.css">
     <style>
         .container-main {
             position: relative;
@@ -92,7 +92,7 @@
 
     <div class="container-main" id="container-main">
         <div class="form-container sign-up-container">
-            <form action="#">
+            <form action="#" method="POST">
                 <h1>Create Account</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -101,22 +101,23 @@
                 </div>
                 <span>or use your email for registration</span>
                 <div class="infield">
-                    <input type="text" placeholder="Full Name" />
+                    <input type="text" placeholder="Full Name" name="signUpFullName" autocomplete="off" />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="email" placeholder="Email" name="email" autocomplete="off" />
+                    <input type="email" placeholder="Email" name="signUpEmail" autocomplete="off" />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password" />
+                    <input type="password" placeholder="Password" name="signUpPassword" autocomplete="off" />
                     <label></label>
                 </div>
-                <button>Sign Up</button>
+                <button type="submit" name="sign-up-btn">Sign Up</button>
             </form>
         </div>
+
         <div class="form-container sign-in-container">
-            <form action="#">
+            <form action="" method="POST">
                 <h1>Sign in</h1>
                 <div class="social-container">
                     <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
@@ -125,17 +126,18 @@
                 </div>
                 <span>or use your account</span>
                 <div class="infield">
-                    <input type="email" placeholder="Email" name="email" autocomplete="off" />
+                    <input type="email" placeholder="Email" name="signInEmail" autocomplete="off">
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password" />
+                    <input type="password" placeholder="Password" name="signInPassword">
                     <label></label>
                 </div>
                 <a href="#" class="forgot">Forgot your password?</a>
-                <button>Sign In</button>
+                <button type="submit" name="sign-in-btn">Sign In</button>
             </form>
         </div>
+
         <div class="overlay-container" id="overlayCon">
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
@@ -156,9 +158,52 @@
 
 
     <!-- js code -->
-    <script src="public/js/index.js"></script>
+    <script src="js/index.js"></script>
     <!-- Bootstrap js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>
+
+<?php
+
+require __DIR__ . "/../vendor/autoload.php";
+include_once __DIR__ . "/../src/handle_error/handle_error.php";
+
+// Sign in
+if (isset($_POST['sign-in-btn'])) {
+    $email = $_POST['signInEmail'];
+    $password = $_POST['signInPassword'];
+
+    if (empty($email) && empty($password)) {
+        echo "Ensure all fields are filled!";
+    } else {
+        $user = new Patient; //creating a new patient
+
+        if ($user->authenticateUser($email, $password)) {
+            echo '<script type="text/javascript">window.location.href = "yes.php";</script>';
+        } else {
+            echo "<br>" . handle_error("Failed to authenticate the user");
+        }
+    }
+}
+
+// Sign up
+if (isset($_POST['sign-up-btn'])) {
+    $email = $_POST['signUpEmail'];
+    $fullName = $_POST['signUpFullName'];
+    $password = $_POST['signUpPassword'];
+
+    if (empty($fullName) && empty($email) && empty($password)) {
+        echo "Ensure all fields are filled!";
+    } else {
+        $user = new Patient; //creating a new patient
+
+        if ($user->createUserDetail($fullName, $email, $password)) {
+            echo '<script type="text/javascript">window.location.href = "yes.php";</script>';
+        } else {
+            echo "<br>" . handle_error("Failed to store your details...") . "Try again!";
+        }
+    }
+}
+?>
