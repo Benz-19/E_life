@@ -11,11 +11,24 @@ class User extends Database
     protected $user_is_verified;
     protected $user_verification_code;
     protected $user_google_id;
+    protected $user_type;
 
     static $mail_domain = array("gmail.com", "yahoo.com", "hotmail.com", "outlook.com");
 
+    // get user type
 
-    public function createUserDetail($userName, $userEmail, $userPassword)
+    public function getUserType()
+    {
+        return $this->user_type;
+    }
+    // set user type
+
+    public function setUserType($user_type)
+    {
+        $this->user_type = $user_type;
+    }
+
+    public function createUserDetail($userName, $userEmail, $userPassword, $user_type)
     {
 
         // validate the username
@@ -26,6 +39,7 @@ class User extends Database
 
         $this->userName = $userName;
         $this->userEmail = $userEmail;
+        $this->user_type = $user_type;
         $this->userPassword = password_hash($userPassword, PASSWORD_DEFAULT);
         $domain = null;
 
@@ -47,13 +61,14 @@ class User extends Database
 
 
         try {
-            $sql = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
+            $sql = "INSERT INTO users (name, email, password, user_type) VALUES (:name, :email, :password, :user_type)";
             $stmt = $this->Connection()->prepare($sql);
 
             $stmt->execute([
                 ':name' => $this->userName,
                 ':email' => $this->userEmail,
-                ':password' => $this->userPassword
+                ':password' => $this->userPassword,
+                ':user_type' => $this->user_type
             ]);
             echo "Insert was successful";
             return true;
@@ -64,23 +79,25 @@ class User extends Database
     }
 
 
-    public function createUserDetailGoogle($userName, $userEmail, $user_is_verified, $user_verification_code, $user_google_id)
+    public function createUserDetailGoogle($userName, $userEmail, $user_is_verified, $user_verification_code, $user_google_id, $user_type)
     {
         $this->userName = $userName;
         $this->userEmail = $userEmail;
         $this->user_is_verified = $user_is_verified;
         $this->user_verification_code = $user_verification_code;
         $this->user_google_id = $user_google_id;
+        $this->user_type = $user_type;
 
         try {
-            $sql = "INSERT INTO users (name, email, google_id, is_verified, verification_code) VALUES (:name, :email, :google_id, :is_verified, :verification_code)";
+            $sql = "INSERT INTO users (name, email, google_id, is_verified, verification_code, user_type) VALUES (:name, :email, :google_id, :is_verified, :verification_code, :user_type)";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
                 ':name' => $this->userName,
                 ':email' => $this->userEmail,
                 ':google_id' => $this->user_google_id,
                 ':is_verified' => $this->user_is_verified,
-                ':verification_code' => $this->user_verification_code
+                ':verification_code' => $this->user_verification_code,
+                ':user_type' => $this->user_type
             ]);
             echo "User created successfully";
             return true;
@@ -133,6 +150,7 @@ class User extends Database
     {
         $this->userEmail = $userEmail;
         $this->userPassword = $userPassword;
+
 
         try {
             $sql = "SELECT * FROM users WHERE email = :email";

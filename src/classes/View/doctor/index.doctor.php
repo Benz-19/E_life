@@ -1,14 +1,14 @@
 <?php
 session_start();
-require __DIR__ . "/../vendor/autoload.php";
-include_once __DIR__ . "/../src/handle_error/handle_error.php";
-include_once __DIR__ . "/../src/classes/View/auth/login.auth.php";
+require __DIR__ . "/../../../../vendor/autoload.php";
+include_once __DIR__ . "/../../../handle_error/handle_error.php";
+include_once __DIR__ . "/../auth/login.auth.php";
 
-$user_type = "patient"; //Default assuming the user signs in directly from the general index page
+$user_type = "doctor";
 
 // Check if the user is already logged in
 if (isset($_SESSION['user_id'])) {
-    echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.patient.view.php";</script>';
+    echo '<script type="text/javascript">window.location.href = "dashboard.doctor.view.php";</script>';
     exit();
 } else {
     // Sign in
@@ -31,13 +31,14 @@ if (isset($_SESSION['user_id'])) {
     // Google Auth
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['google-sign-in-btn']) || isset($_POST['google-sign-up-btn'])) {
-            include_once __DIR__ . "/../src/classes/View/auth/login.googleAuth.php";
+            include_once __DIR__ . "/../auth/login.googleAuth.php";
 
-            $user = new User;
-            $user->setUserType($user_type);
+            setUserType($user_type);
+
             $google_client = getGoogleClient();
             $authUrl = $google_client->createAuthUrl();
             echo '<script type="text/javascript">window.location.href = "' . $authUrl . '";</script>';
+            echo getUserType();
             exit();
         }
     }
@@ -63,7 +64,7 @@ if (isset($_SESSION['user_id'])) {
     <!-- Bootstrap -->
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> -->
     <!-- css stylesheet -->
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="../../../../public/css/index.css">
     <style>
         .container-main {
             position: relative;
@@ -187,15 +188,15 @@ if (isset($_SESSION['user_id'])) {
                 </div>
                 <span>or use your email for registration</span>
                 <div class="infield">
-                    <input type="text" placeholder="Full Name" name="signUpFullName" autocomplete="off" required />
+                    <input type="text" placeholder="Full Name" name="signUpFullName" autocomplete="off" />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="email" placeholder="Email" name="signUpEmail" autocomplete="off" required />
+                    <input type="email" placeholder="Email" name="signUpEmail" autocomplete="off" />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password" name="signUpPassword" autocomplete="off" required />
+                    <input type="password" placeholder="Password" name="signUpPassword" autocomplete="off" />
                     <label></label>
                 </div>
                 <button type="submit" name="sign-up-btn">Sign Up</button>
@@ -220,11 +221,11 @@ if (isset($_SESSION['user_id'])) {
                 </div>
                 <span>or use your account</span>
                 <div class="infield">
-                    <input type="email" placeholder="Email" name="signInEmail" autocomplete="off" required>
+                    <input type="email" placeholder="Email" name="signInEmail" autocomplete="off">
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password" name="signInPassword" required>
+                    <input type="password" placeholder="Password" name="signInPassword">
                     <label></label>
                 </div>
                 <a href="#" class="forgot">Forgot your password?</a>
@@ -252,7 +253,7 @@ if (isset($_SESSION['user_id'])) {
 
 
     <!-- js code -->
-    <script src="js/index.js"></script>
+    <script src="../../../../public/js/index.js"></script>
     <!-- Bootstrap js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
