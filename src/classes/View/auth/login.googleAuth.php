@@ -58,7 +58,7 @@ function handleGoogleUser($google_id, $name, $email, $google_verified, $google_v
 
     echo '<script type="text/javascript">
             alert("Welcome! Redirecting to the dashboard...");
-            window.location.href = "../../../../public/../src/classes/View/patient/dashboard.patient.view.php";
+            window.location.href = "../../../../public/../src/classes/View/patient/dashboard.php";
           </script>';
     exit();
 }

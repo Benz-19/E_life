@@ -7,7 +7,7 @@ $user_type = "patient"; //Default assuming the user signs in directly from the g
 
 // Check if the user is already logged in
 if (isset($_SESSION['user_id'])) {
-    echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.patient.view.php";</script>';
+    echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.php";</script>';
     exit();
 } else {
     // Sign in

@@ -17,7 +17,7 @@ function userSignIn($email, $password)
         $user = new User; //creating a new user (patient/doctor)
 
         if ($user->authenticateUser($email, $password)) {
-            echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.patient.view.php";</script>';
+            echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.php";</script>';
         } else {
             echo "<br>" . handle_error("Failed to authenticate the user");
         }
@@ -41,7 +41,3 @@ function userSignUp($email, $password, $fullName, $user_type)
         echo '<script type="text/javascript">window.location.href = "../src/classes/View/auth/verify.auth.php";</script>'; //redirect from index.php to verify page
     }
 }
-
-//user sign in using google
-
-function userSignUpGoogle() {}

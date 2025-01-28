@@ -8,7 +8,7 @@ $user_type = "doctor";
 
 // Check if the user is already logged in
 if (isset($_SESSION['user_id'])) {
-    echo '<script type="text/javascript">window.location.href = "dashboard.doctor.view.php";</script>';
+    echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
     exit();
 } else {
     // Sign in
