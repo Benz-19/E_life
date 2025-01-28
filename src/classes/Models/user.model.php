@@ -68,9 +68,9 @@ class User extends Database
                 ':name' => $this->userName,
                 ':email' => $this->userEmail,
                 ':password' => $this->userPassword,
-                ':user_type' => $this->user_type
+                ':user_type' => $this->user_type,
             ]);
-            echo "Insert was successful";
+            // echo "Insert was successful";
             return true;
         } catch (PDOException $error) {
             echo handle_error("Failed to insert: ") . $error->getMessage();
@@ -99,7 +99,7 @@ class User extends Database
                 ':verification_code' => $this->user_verification_code,
                 ':user_type' => $this->user_type
             ]);
-            echo "User created successfully";
+            // echo "User created successfully";
             return true;
         } catch (PDOException $error) {
             echo handle_error("Failed to create user: " . $error->getMessage());
@@ -132,7 +132,7 @@ class User extends Database
                 ':verification_code' => $google_verification_code,
                 ':id' => $userId
             ]);
-            echo "User updated successfully";
+            // echo "User updated successfully";
             return true;
         } catch (PDOException $error) {
             echo handle_error("Failed to update user: " . $error->getMessage());
@@ -165,7 +165,7 @@ class User extends Database
             if ($user) {
                 $passwordCheck = password_verify($this->userPassword, $user['password']) || $this->userPassword === $user['password'] ? true : false;
                 if ($passwordCheck) {
-                    echo "User authenticated";
+                    // echo "User authenticated";
                     return true;
                 } else {
                     echo handle_error("Password is incorrect");
@@ -179,7 +179,81 @@ class User extends Database
             echo handle_error("Failed to authenticate user: ") . $error->getMessage();
         }
     }
+
+    public function verifyUserEmail($username, $email)
+    {
+        include_once __DIR__ . "../../../mailer/email.mailer.php";
+        $this->userName = $username;
+        $this->userEmail = $email;
+        try {
+            if (isset($this->userEmail) && isset($this->userName)) {
+                $subject = "Email Verification";
+                $verificationCode = rand(10000, 99999);
+
+                $this->user_verification_code = password_hash($verificationCode, PASSWORD_DEFAULT);
+                $this->setEmailVerificationCode($this->user_verification_code);
+
+                $body = "Hello {$this->userName}
+                <br>We are happy to have received your request to create an account with us.
+                <br>Your verification code is: <b>{$verificationCode}</b>
+                <br>Kindly use this code to verify your email address.
+                <br>Thank you for choosing us.
+                <br>Best regards,
+                <br>E-LIFE TEAM";
+
+                sendEmail($this->userEmail, $this->userName, $subject, $body);
+            }
+        } catch (Exception $error) {
+            echo handle_error("Failed to send email: ") . $error->getMessage();
+        }
+    }
+
+    public function setEmailVerificationCode($verificationCode)
+    {
+        $this->user_verification_code = $verificationCode;
+    }
+
+    public function getEmailVerificationCode()
+    {
+        return $this->user_verification_code;
+    }
+
+    // updates the user verification code
+    public function updateUserVerificationCode($email, $verificationCode)
+    {
+        try {
+            $sql = "UPDATE users SET verification_code = :is_verified WHERE email = :email";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([
+                ':is_verified' => $verificationCode,
+                ':email' => $email
+            ]);
+            return true;
+        } catch (PDOException $error) {
+            echo handle_error("Failed to update user verification code: " . $error->getMessage());
+            return false;
+        }
+    }
+
+    public function updateUserVericationStatus($email, $status)
+    {
+        try {
+            $sql = "UPDATE users SET is_verified = :is_verified WHERE email = :email";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([
+                'is_verified' => $status,
+                ':email' => $email
+            ]);
+            // echo "User verification status updated successfully";
+            return true;
+        } catch (PDOException $error) {
+            echo handle_error("Failed to update user verification status: " . $error->getMessage());
+            return false;
+        }
+    }
 }
+
+
 
 // $test = new User;
 // $test->setUserDetailGoogle("Kingsley", "kings@gmail.com", "5555", true, 4449, 7);

@@ -3,7 +3,6 @@ session_start();
 require __DIR__ . "/../vendor/autoload.php";
 include_once __DIR__ . "/../src/handle_error/handle_error.php";
 include_once __DIR__ . "/../src/classes/View/auth/login.auth.php";
-
 $user_type = "patient"; //Default assuming the user signs in directly from the general index page
 
 // Check if the user is already logged in
@@ -187,15 +186,15 @@ if (isset($_SESSION['user_id'])) {
                 </div>
                 <span>or use your email for registration</span>
                 <div class="infield">
-                    <input type="text" placeholder="Full Name" name="signUpFullName" autocomplete="off" required />
+                    <input type="text" placeholder="Full Name" name="signUpFullName" autocomplete="off" />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="email" placeholder="Email" name="signUpEmail" autocomplete="off" required />
+                    <input type="email" placeholder="Email" name="signUpEmail" autocomplete="off" />
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password" name="signUpPassword" autocomplete="off" required />
+                    <input type="password" placeholder="Password" name="signUpPassword" autocomplete="off" />
                     <label></label>
                 </div>
                 <button type="submit" name="sign-up-btn">Sign Up</button>
@@ -220,11 +219,11 @@ if (isset($_SESSION['user_id'])) {
                 </div>
                 <span>or use your account</span>
                 <div class="infield">
-                    <input type="email" placeholder="Email" name="signInEmail" autocomplete="off" required>
+                    <input type="email" placeholder="Email" name="signInEmail" autocomplete="off">
                     <label></label>
                 </div>
                 <div class="infield">
-                    <input type="password" placeholder="Password" name="signInPassword" required>
+                    <input type="password" placeholder="Password" name="signInPassword">
                     <label></label>
                 </div>
                 <a href="#" class="forgot">Forgot your password?</a>

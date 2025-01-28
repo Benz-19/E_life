@@ -7,7 +7,21 @@ function handle_error($msg)
     echo '<div class="msg">' . $msg . '<br></div>';
 }
 
-// handle_error("This is an error message");
+// general success handling
+
+function success_message($msg)
+{
+    echo '<div class="msg-success">' . $msg . '<br></div>';
+}
+
+// general success handling
+
+function redirect_message($msg)
+{
+    echo '<div class="msg-redirect">' . $msg . '<br></div>';
+}
+
+
 ?>
 
 
@@ -18,10 +32,21 @@ function handle_error($msg)
         text-align: center;
         font-style: italic;
     }
+
+    .msg-success,
+    .msg-redirect {
+
+        color: green;
+        font-size: medium;
+        text-align: center;
+        font-style: italic;
+    }
 </style>
 
 <script>
     const error_Msg = document.getElementsByClassName('msg');
+    const success_Msg = document.getElementsByClassName('msg-success');
+    const redirect_Msg = document.getElementsByClassName('msg-redirect');
 
     // Error message display timeout
     if (error_Msg) {
@@ -29,8 +54,30 @@ function handle_error($msg)
             for (let i = 0; i < error_Msg.length; i++) {
                 error_Msg[i].style.display = 'none';
             }
-        }, 8000); //Dsiplays the error message to the user for 8 seconds
+        }, 12000); //Dsiplays the error message to the user for 8 seconds
     } else {
         console.log("Failed To Display the Error Message");
+    }
+
+    // Success message display timeout
+    if (success_Msg) {
+        setTimeout(() => {
+            for (let i = 0; i < success_Msg.length; i++) {
+                success_Msg[i].style.display = 'none';
+            }
+        }, 12000); //Dsiplays the success message to the user for 12 seconds
+    } else {
+        console.log("Failed To Display the Success Message");
+    }
+
+    // Redirect message display timeout
+    if (redirect_Msg) {
+        setTimeout(() => {
+            for (let i = 0; i < redirect_Msg.length; i++) {
+                redirect_Msg[i].style.display = 'none';
+            }
+        }, 40000); //Dsiplays the redirect message to the user for 40 seconds
+    } else {
+        console.log("Failed To Display the Success Message");
     }
 </script>

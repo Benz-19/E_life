@@ -104,11 +104,3 @@ function sendEmail($recipientAddress, $recipientName, $subject, $body)
         }
     }
 }
-
-
-$recipientAddress = "kingsleyikenna2019@gmail.com";
-$recipientName = "Kingsley Ikenna";
-$subject = "Email Verification";
-$imgPath = '<img src="../../public/images/medical_logo.png">';
-$body = "{$imgPath}<br>Your verification code is: <b>55555</b>";
-sendEmail($recipientAddress, $recipientName, $subject, $body);
