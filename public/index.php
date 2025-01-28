@@ -3,6 +3,7 @@ session_start();
 require __DIR__ . "/../vendor/autoload.php";
 include_once __DIR__ . "/../src/handle_error/handle_error.php";
 include_once __DIR__ . "/../src/classes/View/auth/login.auth.php";
+
 $user_type = "patient"; //Default assuming the user signs in directly from the general index page
 
 // Check if the user is already logged in
@@ -15,7 +16,7 @@ if (isset($_SESSION['user_id'])) {
         $email = $_POST['signInEmail'];
         $password = $_POST['signInPassword'];
 
-        userSignIn($email, $password); //function to sign in
+        userSignIn($email, $password, $user_type); //function to sign in
     }
 
     // Sign up

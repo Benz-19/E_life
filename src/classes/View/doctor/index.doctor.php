@@ -6,6 +6,8 @@ include_once __DIR__ . "/../auth/login.auth.php";
 
 $user_type = "doctor";
 
+$_SESSION['user_type'] = $user_type;
+
 // Check if the user is already logged in
 if (isset($_SESSION['user_id'])) {
     echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
@@ -16,7 +18,7 @@ if (isset($_SESSION['user_id'])) {
         $email = $_POST['signInEmail'];
         $password = $_POST['signInPassword'];
 
-        userSignIn($email, $password); //function to sign in
+        userSignIn($email, $password, $user_type); //function to sign in
     }
 
     // Sign up
@@ -33,12 +35,9 @@ if (isset($_SESSION['user_id'])) {
         if (isset($_POST['google-sign-in-btn']) || isset($_POST['google-sign-up-btn'])) {
             include_once __DIR__ . "/../auth/login.googleAuth.php";
 
-            setUserType($user_type);
-
             $google_client = getGoogleClient();
             $authUrl = $google_client->createAuthUrl();
             echo '<script type="text/javascript">window.location.href = "' . $authUrl . '";</script>';
-            echo getUserType();
             exit();
         }
     }

@@ -9,7 +9,7 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 
 // Path: src/classes/View/auth/login.auth.php
 //user sign in without google
-function userSignIn($email, $password)
+function userSignIn($email, $password, $user_type)
 {
     if (empty($email) && empty($password)) {
         echo "Ensure all fields are filled!";
@@ -17,7 +17,13 @@ function userSignIn($email, $password)
         $user = new User; //creating a new user (patient/doctor)
 
         if ($user->authenticateUser($email, $password)) {
-            echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.php";</script>';
+
+            // Determine the user
+            if ($user_type === "patient") {
+                echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.php";</script>';
+            } elseif ($user_type === "doctor") {
+                echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
+            }
         } else {
             echo "<br>" . handle_error("Failed to authenticate the user");
         }
@@ -39,6 +45,11 @@ function userSignUp($email, $password, $fullName, $user_type)
         $_SESSION['email'] = $email;
         $_SESSION['password'] = $password;
         $_SESSION['userType'] = $user_type;
-        echo '<script type="text/javascript">window.location.href = "../src/classes/View/auth/verify.auth.php";</script>'; //redirect from index.php to verify page
+
+        if ($user_type === "patient") {
+            echo '<script type="text/javascript">window.location.href = "../src/classes/View/auth/verify.auth.php";</script>'; //redirect from index.php to verify page
+        } elseif ($user_type === "doctor") {
+            echo '<script type="text/javascript">window.location.href = "../auth/verify.auth.php";</script>'; //redirect from index.php to verify page
+        }
     }
 }

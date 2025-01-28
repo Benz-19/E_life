@@ -16,20 +16,7 @@ include_once __DIR__ . '/../../../../src/handle_error/handle_error.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../../');
 $dotenv->load();
 
-// User type
-$userType = null;
 
-function setUserType($user_type) //sets the user type
-{
-    global $userType;
-    $userType = $user_type;
-}
-
-function getUserType() //sets the user type
-{
-    global $userType;
-    return $userType;
-}
 
 
 function getGoogleClient()
@@ -51,15 +38,26 @@ function handleGoogleUser($google_id, $name, $email, $google_verified, $google_v
     if ($existingUser) {
         $user->updateUserDetailGoogle($existingUser['id'], $name, $email, $google_verified, $google_verification_code);
     } else {
-        $user->createUserDetailGoogle($name, $email, $google_verified, $google_verification_code, $google_id, getUserType());
+        $user->createUserDetailGoogle($name, $email, $google_verified, $google_verification_code, $google_id, $_SESSION['user_type']);
     }
 
     $_SESSION['user_id'] = $existingUser ? $existingUser['id'] : $user->getLastInsertId();
 
-    echo '<script type="text/javascript">
-            alert("Welcome! Redirecting to the dashboard...");
-            window.location.href = "../../../../public/../src/classes/View/patient/dashboard.php";
-          </script>';
+    if ($_SESSION['user_type'] === "patient") {
+
+        echo '<script type="text/javascript">
+                alert("Welcome! Redirecting to the dashboard...");
+                window.location.href = "../../../../public/../src/classes/View/patient/dashboard.php";
+              </script>';
+    } elseif ($_SESSION['user_type'] === "doctor") {
+        echo '<script type="text/javascript">
+                alert("Welcome! Redirecting to the dashboard...");
+                window.location.href = "../doctor/index.doctor.php";
+              </script>';
+    } else {
+        echo handle_error("User type not found");
+        exit();
+    }
     exit();
 }
 

@@ -25,11 +25,20 @@ if (isset($_POST['submit_code'])) {
             $user->updateUserVerificationCode($email, $_SESSION['verificationCode']);
             $user->updateUserVericationStatus($email, 1);
             redirect_message("redirecting you to the login page...");
-            echo '<script type="text/javascript">
-            setTimeout(()=>{
-                window.location.href = "../../../../public/index.php";
-            }, 10000);
-            </script>';
+
+            if ($user_type === "patient") {
+                echo '<script type="text/javascript">
+                setTimeout(()=>{
+                    window.location.href = "../../../../public/index.php";
+                }, 10000);
+                </script>';
+            } elseif ($user_type === "doctor") {
+                echo '<script type="text/javascript">
+                setTimeout(()=>{
+                    window.location.href = "../doctor/index.doctor.php";
+                }, 10000);
+                </script>';
+            }
         } else {
             echo "<br>" . handle_error("Failed to store your details...") . handle_error("Try again!");
         }
