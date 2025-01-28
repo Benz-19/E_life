@@ -23,6 +23,7 @@ function userSignIn($email, $password)
         }
     }
 }
+
 function userSignUp($email, $password, $fullName, $user_type)
 {
     if (empty($fullName) && empty($email) && empty($password)) {
