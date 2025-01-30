@@ -1,48 +1,12 @@
 <?php
-session_start();
 require __DIR__ . "/../vendor/autoload.php";
 include_once __DIR__ . "/../src/handle_error/handle_error.php";
 include_once __DIR__ . "/../src/classes/View/auth/login.auth.php";
 
-$user_type = "patient"; //Default assuming the user signs in directly from the general index page
-
-// Check if the user is already logged in
-if (isset($_SESSION['user_id'])) {
-    echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.php";</script>';
-    exit();
-} else {
-    // Sign in
-    if (isset($_POST['sign-in-btn'])) {
-        $email = $_POST['signInEmail'];
-        $password = $_POST['signInPassword'];
-
-        userSignIn($email, $password, $user_type); //function to sign in
-    }
-
-    // Sign up
-    if (isset($_POST['sign-up-btn'])) {
-        $email = $_POST['signUpEmail'];
-        $fullName = $_POST['signUpFullName'];
-        $password = $_POST['signUpPassword'];
-
-        userSignUp($email, $password, $fullName, $user_type); //function to sign up
-    }
-
-    // Google Auth
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        if (isset($_POST['google-sign-in-btn']) || isset($_POST['google-sign-up-btn'])) {
-            include_once __DIR__ . "/../src/classes/View/auth/login.googleAuth.php";
-
-            $user = new User;
-            $user->setUserType($user_type);
-            $google_client = getGoogleClient();
-            $authUrl = $google_client->createAuthUrl();
-            echo '<script type="text/javascript">window.location.href = "' . $authUrl . '";</script>';
-            exit();
-        }
-    }
-}
-
+// Redirect to the patient index.php page
+header("Location: ../src/classes/View/patient/dashboard.php");
+// echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.php";</script>';
+exit();
 ?>
 
 
