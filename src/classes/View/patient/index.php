@@ -31,7 +31,7 @@ if (isset($_SESSION['user_ihd'])) {
     // Google Auth
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['google-sign-in-btn']) || isset($_POST['google-sign-up-btn'])) {
-            include_once __DIR__ . "/../src/classes/View/auth/login.googleAuth.php";
+            include_once __DIR__ . "/../auth/login.googleAuth.php";
 
             $user = new User;
             $user->setUserType($user_type);
@@ -165,10 +165,38 @@ if (isset($_SESSION['user_ihd'])) {
         .social-button:focus {
             outline: none;
         }
+
+        .loader-dots {
+            display: flex;
+            justify-content: center;
+        }
+
+        .dot {
+            animation: loading 0.6s infinite alternate;
+        }
+
+        @keyframes loading {
+            0% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1.5);
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Loading -->
+    <div id="loader" class="fixed inset-0 flex flex-col items-center justify-center bg-gray-100">
+        <h1 class="text-lg mt-3">Loading</h1>
+        <div class="loader-dots">
+            <span class="dot animate-pulse bg-blue-600 rounded-full h-2 w-2 mx-1"></span>
+            <span class="dot animate-pulse bg-blue-600 rounded-full h-2 w-2 mx-1"></span>
+            <span class="dot animate-pulse bg-blue-600 rounded-full h-2 w-2 mx-1"></span>
+        </div>
+    </div>
 
     <div class="container-main" id="container-main">
         <div class="form-container sign-up-container">
@@ -253,6 +281,15 @@ if (isset($_SESSION['user_ihd'])) {
 
     <!-- js code -->
     <script src="../../../../public/js/index.js"></script>
+
+    <script>
+        setTimeout(() => {
+            document.getElementById('loader').style.display = 'none';
+            const formContainer = document.getElementById('form-container');
+            formContainer.classList.remove('hidden');
+            document.getElementById('verification-form').style.transform = 'translateX(0)';
+        }, 5000);
+    </script>
     <!-- Bootstrap js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

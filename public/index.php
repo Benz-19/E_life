@@ -4,7 +4,7 @@ include_once __DIR__ . "/../src/handle_error/handle_error.php";
 include_once __DIR__ . "/../src/classes/View/auth/login.auth.php";
 
 // Redirect to the patient index.php page
-header("Location: ../src/classes/View/patient/dashboard.php");
+header("Location: ../src/classes/View/patient/index.php");
 // echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.php";</script>';
 exit();
 ?>
@@ -133,7 +133,6 @@ exit();
 </head>
 
 <body>
-
     <div class="container-main" id="container-main">
         <div class="form-container sign-up-container">
             <form action="#" method="POST">
@@ -217,6 +216,7 @@ exit();
 
     <!-- js code -->
     <script src="js/index.js"></script>
+
     <!-- Bootstrap js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
