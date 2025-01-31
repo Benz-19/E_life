@@ -17,8 +17,6 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../../');
 $dotenv->load();
 
 
-
-
 function getGoogleClient()
 {
     $client = new Google_Client();
