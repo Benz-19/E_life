@@ -10,6 +10,27 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
+        #terminate-conversation {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .terminate-content {
+            background-color: rgb(212, 205, 195);
+            padding: 20px;
+            border-radius: 9px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
         .hover-send {
             transition: all 0.5s ease-in-out;
         }
@@ -21,22 +42,22 @@
 </head>
 
 <body class="bg-gray-100 h-screen flex flex-col">
-    <div class="w-full max-w-md mx-auto bg-white shadow-lg rounded-lg flex flex-col h-full relative">
+    <div id="main-cont" class="w-full max-w-md mx-auto bg-white shadow-lg rounded-lg flex flex-col h-full relative">
 
         <!-- Header -->
         <div class="flex items-center justify-between p-4 border-b">
-            <button class="text-gray-600 text-lg">
+            <button id="return-btn" class="text-gray-600 text-lg">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <div class="flex flex-wrap flex-col">
-                <h2 class="top-0 text-lg font-semibold">Dcotor Chat</h2>
+                <h2 class="top-0 text-lg font-semibold">Doctor Chat</h2>
                 <!-- Online Status -->
                 <div id="status-indicator" class="top-10 flex items-center space-x-2">
                     <span id="status-circle" class="w-3 h-3 rounded-full bg-red-500"></span>
                     <span id="status-text" class="text-sm font-bold text-black">Offline</span>
                 </div>
             </div>
-            <img src="https://via.placeholder.com/40" alt="User Image" class="w-10 h-10 rounded-full">
+            <img src="../../../../public/images/user.png" alt="User Image" class="w-5 h-5 rounded-full">
         </div>
 
         <!-- Chat Messages -->
@@ -54,6 +75,18 @@
         </div>
     </div>
 
+    <!-- Termination Confirmation Modal -->
+    <div id="terminate-conversation">
+        <article class="terminate-content">
+            <h4 class="font-bold">NOTE:</h4>
+            <p class="italic">By clicking OK, all your conversation here will be deleted permanently.</p>
+            <div class="flex justify-between mt-4">
+                <button id="continue-btn" class="bg-gray-500 text-white px-3 py-2 rounded-lg hover-send">CANCEL</button>
+                <button id="terminate-btn" class="bg-red-500 text-white px-5 py-2 rounded-lg hover-send">OK</button>
+            </div>
+        </article>
+    </div>
+
     <script>
         const conn = new WebSocket('ws://localhost:8080');
         const chatBox = document.getElementById("chat-box");
@@ -62,6 +95,10 @@
         const typingIndicator = document.getElementById("typing-indicator");
         const statusCircle = document.getElementById("status-circle");
         const statusText = document.getElementById("status-text");
+        const terminateConversation = document.getElementById("terminate-conversation");
+        const returnBtn = document.getElementById("return-btn");
+        const continueConversation = document.getElementById("continue-btn");
+        const terminateBtn = document.getElementById("terminate-btn");
         let typingTimeout;
 
         conn.onopen = () => {
@@ -104,19 +141,16 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        messageInput.addEventListener("input", () => {
-            clearTimeout(typingTimeout);
-            conn.send("typing...");
-            typingTimeout = setTimeout(() => conn.send("stop typing"), 2000);
+        returnBtn.addEventListener("click", () => {
+            terminateConversation.style.display = "flex";
         });
 
-        sendButton.addEventListener("click", sendMessage);
+        continueConversation.addEventListener("click", () => {
+            terminateConversation.style.display = "none";
+        });
 
-        messageInput.addEventListener("keydown", (e) => {
-            if (window.innerWidth > 768 && e.key === "Enter") {
-                e.preventDefault();
-                sendMessage();
-            }
+        terminateBtn.addEventListener("click", () => {
+            window.location.href = "dashboard.php";
         });
     </script>
 </body>
