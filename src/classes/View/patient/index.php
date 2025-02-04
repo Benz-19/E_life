@@ -19,7 +19,6 @@ if (isset($_SESSION['user_ihd'])) {
         userSignIn($email, $password, $user_type); //function to sign in
     }
 
-
     // Sign up
     if (isset($_POST['sign-up-btn'])) {
         $email = $_POST['signUpEmail'];

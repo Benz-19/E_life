@@ -34,8 +34,9 @@
         </div>
     </div>
     <div class="message_template">
-        <li class="message"
-            <div class="avatar">
+        <li class="message">
+            <div class="avatar"></div>
+        <li>
     </div>
     <div class="text_wrapper">
         <div class="text">
