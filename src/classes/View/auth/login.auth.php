@@ -17,11 +17,14 @@ function userSignIn($email, $password, $user_type)
         $user = new User; //creating a new user (patient/doctor)
 
         if ($user->authenticateUser($email, $password)) {
-
             // Determine the user
             if ($user_type === "patient") {
+                $_SESSION["patient-login"] = true;
+                $_SESSION["patient-id"] = $user->getUserID($email);
                 echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.php";</script>';
             } elseif ($user_type === "doctor") {
+                $_SESSION["doctor-login"] = true;
+                $_SESSION["doctorEmail"] = $email;
                 echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
             }
         } else {

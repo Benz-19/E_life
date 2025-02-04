@@ -1,3 +1,10 @@
+<?php
+if (!$_SESSION["login-user"]) {
+    echo '<script type="text/javascript">window.location = "index.php"</script>';
+} else {
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -168,6 +175,7 @@
             window.location.href = "dashboard.php";
         });
     </script>
+    <script src="../../../js/script.js"></script>
 </body>
 
 </html>

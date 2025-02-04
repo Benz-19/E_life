@@ -145,6 +145,20 @@ class User extends Database
         return $this->Connection()->lastInsertId();
     }
 
+    // Obtains the user ID from the Database
+    public function getUserID($email)
+    {
+        try {
+            $sql = "SELECT user_id FROM users WHERE email = :email";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute(['email' => $email]);
+            return $stmt->fetch(PDO::FETCH_ASSOC)["user_id"];
+        } catch (PDOException $error) {
+            handle_error("Failed to get the user ID");
+            echo $error->getMessage();
+        }
+    }
+
     // user authentication
     public function authenticateUser($userEmail, $userPassword)
     {
