@@ -141,6 +141,21 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
+        messageInput.addEventListener("input", () => {
+            clearTimeout(typingTimeout);
+            conn.send("typing...");
+            typingTimeout = setTimeout(() => conn.send("stop typing"), 2000);
+        });
+
+        sendButton.addEventListener("click", sendMessage);
+
+        messageInput.addEventListener("keydown", (e) => {
+            if (window.innerWidth > 768 && e.key === "Enter") {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
         returnBtn.addEventListener("click", () => {
             terminateConversation.style.display = "flex";
         });
