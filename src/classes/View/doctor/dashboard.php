@@ -7,6 +7,7 @@ $user = new User; //Doctor
 $doctorEmail =  $_SESSION["doctorEmail"];
 $doctor_id = $user->getUserID($doctorEmail);
 echo "ID = {$doctor_id}";
+
 ?>
 
 

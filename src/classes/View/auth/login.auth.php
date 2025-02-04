@@ -20,11 +20,15 @@ function userSignIn($email, $password, $user_type)
             // Determine the user
             if ($user_type === "patient") {
                 $_SESSION["patient-login"] = true;
-                $_SESSION["patient-id"] = $user->getUserID($email);
+                $_SESSION["patientEmail"] = $email;
+                $_SESSION["logged-in-patients"] = array();
+                $_SESSION["logged-in-patients"][0] = $user->getUserID($email);
                 echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.php";</script>';
             } elseif ($user_type === "doctor") {
                 $_SESSION["doctor-login"] = true;
                 $_SESSION["doctorEmail"] = $email;
+                $_SESSION["logged-in-doctors"] = array();
+                $_SESSION["logged-in-doctors"][0] = $user->getUserID($email);
                 echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
             }
         } else {
