@@ -68,7 +68,9 @@ echo "ID = {$doctor_id}";
                         <img src="../../../../public/images/send_message.png" alt="Health Logo" class="h-10 mr-3">
                     </div>
                     <p class="mt-2 text-gray-600">Chat securely with your doctor anytime, anywhere.</p>
-                    <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-300 mx-card">Learn More</button>
+                    <a href="available.pat.php">
+                        <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-300 mx-card">Learn More</button>
+                    </a>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform my-card">
                     <div class="flex justify-between bg-white p-6 rounded-lg shadow-lg transition-transform transform">
