@@ -15,20 +15,22 @@ function userSignIn($email, $password, $user_type)
         echo "Ensure all fields are filled!";
     } else {
         $user = new User; //creating a new user (patient/doctor)
-
+        $isLoggedIn = new loggedInUser;
         if ($user->authenticateUser($email, $password)) {
             // Determine the user
             if ($user_type === "patient") {
                 $_SESSION["patient-login"] = true;
+                $userID = $user->getUserID($email);
                 $_SESSION["patientEmail"] = $email;
-                $_SESSION["logged-in-patients"] = array();
                 $_SESSION["logged-in-patients"][0] = $user->getUserID($email);
+                $isLoggedIn->setLoggedInUser($userID, $email, $user_type);
                 echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
             } elseif ($user_type === "doctor") {
                 $_SESSION["doctor-login"] = true;
+                $userID = $user->getUserID($email);
                 $_SESSION["doctorEmail"] = $email;
-                $_SESSION["logged-in-doctors"] = array();
                 $_SESSION["logged-in-doctors"][0] = $user->getUserID($email);
+                $isLoggedIn->setLoggedInUser($userID, $email, $user_type);
                 echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
             }
         } else {

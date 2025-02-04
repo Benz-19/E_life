@@ -25,5 +25,6 @@ class loggedInUser extends User
         $sql = "SELECT * FROM logged_in_users";
         $stmt = $this->Connection()->prepare($sql);
         $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
