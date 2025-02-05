@@ -56,7 +56,7 @@ if (!isset($_SESSION["doctorEmail"])) {
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-sm text-green-500">Online</span>
+                                    <span class="text-sm text-green-500"><?php echo $user['presence']; ?></span>
                                 </div>
                             </li>
                         <?php endif; ?>
