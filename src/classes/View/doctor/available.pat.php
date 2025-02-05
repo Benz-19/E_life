@@ -15,10 +15,6 @@ if (!isset($_SESSION["doctorEmail"])) {
     } catch (Exception $e) {
         echo handle_error("Failed to fetch logged-in users.") . "<br>" . $e->getMessage();
     }
-
-    echo "<pre>";
-    print_r($users);
-    echo "</pre>";
 }
 ?>
 
@@ -46,11 +42,10 @@ if (!isset($_SESSION["doctorEmail"])) {
         <h1 class="text-2xl font-bold mb-4 text-gray-800">Available Patients</h1>
         <div class="bg-white shadow rounded-lg">
             <?php if (!empty($users)) : ?>
-                <?php $index = 0; ?>
                 <ul class="divide-y divide-gray-200">
                     <?php foreach ($users as $user) : ?>
                         <!-- Filter for the patients ONLY -->
-                        <?php if ($users[$index]["user_type"] === "patient") : ?>
+                        <?php if ($user["user_type"] === "patient") : ?>
                             <li class="flex items-center p-4 hover:bg-gray-50 cursor-pointer"
                                 onclick="handleSelectUser('<?php echo $user['user_id']; ?>')">
                                 <img src="../../../../public/images/user.png" alt="User Avatar" class="w-12 h-12 rounded-full mr-4">
@@ -64,8 +59,6 @@ if (!isset($_SESSION["doctorEmail"])) {
                                     <span class="text-sm text-green-500">Online</span>
                                 </div>
                             </li>
-                            <!-- Index increment (key increment) -->
-                            <?php $index++; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </ul>

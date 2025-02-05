@@ -15,10 +15,6 @@ if (!isset($_SESSION["patientEmail"])) {
     } catch (Exception $e) {
         echo handle_error("Failed to fetch logged-in users.") . "<br>" . $e->getMessage();
     }
-
-    echo "<pre>";
-    print_r($users);
-    echo "</pre>";
 }
 ?>
 
@@ -43,14 +39,13 @@ if (!isset($_SESSION["patientEmail"])) {
 
 <body class="bg-gray-100">
     <div class="max-w-2xl mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-4 text-gray-800">Available Doctors</h1>
+        <h1 class="text-2xl font-bold mb-4 text-gray-800">Available doctors</h1>
         <div class="bg-white shadow rounded-lg">
             <?php if (!empty($users)) : ?>
-                <?php $index = 0; ?>
                 <ul class="divide-y divide-gray-200">
                     <?php foreach ($users as $user) : ?>
                         <!-- Filter for the patients ONLY -->
-                        <?php if ($users[$index]["user_type"] === "doctor") : ?>
+                        <?php if ($user["user_type"] === "doctor") : ?>
                             <li class="flex items-center p-4 hover:bg-gray-50 cursor-pointer"
                                 onclick="handleSelectUser('<?php echo $user['user_id']; ?>')">
                                 <img src="../../../../public/images/user.png" alt="User Avatar" class="w-12 h-12 rounded-full mr-4">
@@ -61,11 +56,9 @@ if (!isset($_SESSION["patientEmail"])) {
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-sm text-green-500">Online</span>
+                                    <span class="text-sm text-green-500"><?php echo $user['presence']; ?></span>
                                 </div>
                             </li>
-                            <!-- Index increment (key increment) -->
-                            <?php $index++; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </ul>

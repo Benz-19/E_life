@@ -6,15 +6,16 @@ include "user.model.php";
 
 class loggedInUser extends User
 {
-    public function setLoggedInUser($userID, $userName, $user_type)
+    public function setLoggedInUser($userID, $userName, $user_type, $userPresence)
     {
         try {
-            $sql = "INSERT INTO logged_in_users (user_name, user_id, user_type) VALUES (:username, :id, :userType)";
+            $sql = "INSERT INTO logged_in_users (user_name, user_id, user_type, presence) VALUES (:username, :id, :userType, :presence)";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
                 ':username' => $userName,
                 ':id' => $userID,
-                ':userType' => $user_type
+                ':userType' => $user_type,
+                ':presence' => $userPresence
             ]);
             return true;
         } catch (PDOException $error) {

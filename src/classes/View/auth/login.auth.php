@@ -17,28 +17,41 @@ function userSignIn($email, $password, $user_type)
     } else {
         $user = new User; //creating a new user (patient/doctor)
         $isLoggedIn = new loggedInUser;
+
         if ($user->authenticateUser($email, $password)) {
+
+            $userPresence = "offline"; // Set the user presence to online
+
             // Determine the user
-            if ($user_type === $user->getUserType($email)) { //For the patient
+
+            if ($user_type === $user->getUserType($email)) { //For the patient  -- check the user type from the database
+
                 $_SESSION["patient-login"] = true;
                 $userID = $user->getUserID($email);
                 $_SESSION["patientEmail"] = $email;
                 $_SESSION["logged-in-patients"][0] = $user->getUserID($email);
-                if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type))
+
+                //LOGIN the patient
+                if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type, $userPresence)) {
                     echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
-            } elseif ($user_type === $user->getUserTypeFromDB($email)) { //For the doctor
-                //    echo $user->getUserTypeFromDB();
+                }
+            } elseif ($user_type === $user->getUserTypeFromDB($email)) { //For the doctor -- check the user type from the database
+
                 $_SESSION["doctor-login"] = true;
                 $userID = $user->getUserID($email);
                 $_SESSION["doctorEmail"] = $email;
                 $_SESSION["logged-in-doctors"][0] = $user->getUserID($email);
-                if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type))
+
+                //LOGIN the user
+                if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type, $userPresence)) {
                     echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
+                }
             } else {
                 echo "<br>" . handle_error("Failed to authenticate the user") . handle_error("You don't have the right to access this page...");
                 handle_error("ACCESS DENIED!");
             }
         } else {
+            $userPresence = "Offline"; // Set the user presence to offline
             echo "<br>" . handle_error("Failed to authenticate the user");
         }
     }
