@@ -1,7 +1,19 @@
 <?php
-if (!$_SESSION["login-user"]) {
+session_start();
+if (!$_SESSION["patient-login"]) {
     echo '<script type="text/javascript">window.location = "index.php"</script>';
 } else {
+    require_once __DIR__ . "/../../../../vendor/autoload.php";
+    require_once __DIR__ . "/../../Models/userState.model.php";
+
+    if (isset($_POST["terminateComm"])) {
+        echo $_GET["user_id"];
+
+        $deleteLoggedInUser = new loggedInUser;
+        $deleteLoggedInUser->removeLoggedInUser($deleteLoggedInUser->getUserID($_SESSION["patientEmail"]));
+        header("Location: dashboard.php");
+        exit();
+    }
 }
 ?>
 
@@ -84,14 +96,14 @@ if (!$_SESSION["login-user"]) {
 
     <!-- Termination Confirmation Modal -->
     <div id="terminate-conversation">
-        <article class="terminate-content">
+        <form method="post" class="terminate-content">
             <h4 class="font-bold">NOTE:</h4>
             <p class="italic">By clicking OK, all your conversation here will be deleted permanently.</p>
             <div class="flex justify-between mt-4">
                 <button id="continue-btn" class="bg-gray-500 text-white px-3 py-2 rounded-lg hover-send">CANCEL</button>
-                <button id="terminate-btn" class="bg-red-500 text-white px-5 py-2 rounded-lg hover-send">OK</button>
+                <button id="terminate-btn" class="bg-red-500 text-white px-5 py-2 rounded-lg hover-send" name="terminateComm">OK</button>
             </div>
-        </article>
+        </form>
     </div>
 
     <script>

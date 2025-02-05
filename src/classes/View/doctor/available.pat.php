@@ -72,8 +72,7 @@ if (!isset($_SESSION["doctorEmail"])) {
 
     <script>
         function handleSelectUser(userId) {
-            alert(`Selected user ID: ${userId}`);
-            // Replace the alert with logic to start communication
+            window.location.href = `./message.doctor.php?user_id=${userId}`;
         }
     </script>
 </body>

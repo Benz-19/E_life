@@ -1,3 +1,25 @@
+<?php
+session_start();
+if (!$_SESSION["doctor-login"]) {
+    echo '<script type="text/javascript">window.location = "index.doctor.php"</script>';
+} else {
+    require_once __DIR__ . "/../../../../vendor/autoload.php";
+    require_once __DIR__ . "/../../Models/userState.model.php";
+
+    $user = new User;
+    $deleteLoggedInUser = new loggedInUser;
+
+    echo $user->getUserID($_SESSION["doctorEmail"]);
+
+    if (isset($_POST["terminateComm"])) {
+        echo $_GET["user_id"];
+        $deleteLoggedInUser->removeLoggedInUser($user->getUserID($_SESSION["doctorEmail"]));
+        header("Location: dashboard.php");
+        exit();
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

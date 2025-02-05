@@ -20,7 +20,7 @@ function userSignIn($email, $password, $user_type)
 
         if ($user->authenticateUser($email, $password)) {
 
-            $userPresence = "offline"; // Set the user presence to online
+            $userPresence = "online"; // Set the user presence to online
 
             // Determine the user
 
