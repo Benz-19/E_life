@@ -11,6 +11,7 @@ use Google\Client as Google_Client;
 use Google\Service\Oauth2 as Google_Service_Oauth2;
 
 require_once __DIR__ . '/../../../../vendor/autoload.php';
+require_once __DIR__ . '/../../Models/userState.model.php';
 include_once __DIR__ . '/../../../../src/handle_error/handle_error.php';
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../../');
