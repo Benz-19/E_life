@@ -28,7 +28,7 @@ class loggedInUser extends User
             $sql = "SELECT * FROM logged_in_users";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $error) {
             echo handle_error("Unable to GET the logged-in user details...") . "<br>" . $error->getMessage();
         }
