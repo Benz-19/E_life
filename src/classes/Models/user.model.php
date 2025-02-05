@@ -265,6 +265,19 @@ class User extends Database
             return false;
         }
     }
+
+    // GET the user TYPE
+    public function getUserTypeFromDB($email)
+    {
+        try {
+            $sql = "SELECT user_type FROM users WHERE email=:email";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute(['email' => $email]);
+            return $stmt->fetch(PDO::FETCH_ASSOC)["user_type"];
+        } catch (PDOException $error) {
+            handle_error("Failed to get user type: " . $error->getMessage());
+        }
+    }
 }
 
 

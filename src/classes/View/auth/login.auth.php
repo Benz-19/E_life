@@ -19,20 +19,24 @@ function userSignIn($email, $password, $user_type)
         $isLoggedIn = new loggedInUser;
         if ($user->authenticateUser($email, $password)) {
             // Determine the user
-            if ($user_type === "patient") {
+            if ($user_type === $user->getUserType($email)) { //For the patient
                 $_SESSION["patient-login"] = true;
                 $userID = $user->getUserID($email);
                 $_SESSION["patientEmail"] = $email;
                 $_SESSION["logged-in-patients"][0] = $user->getUserID($email);
                 if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type))
                     echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
-            } elseif ($user_type === "doctor") {
+            } elseif ($user_type === $user->getUserTypeFromDB($email)) { //For the doctor
+                //    echo $user->getUserTypeFromDB();
                 $_SESSION["doctor-login"] = true;
                 $userID = $user->getUserID($email);
                 $_SESSION["doctorEmail"] = $email;
                 $_SESSION["logged-in-doctors"][0] = $user->getUserID($email);
                 if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type))
                     echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
+            } else {
+                echo "<br>" . handle_error("Failed to authenticate the user") . handle_error("You don't have the right to access this page...");
+                handle_error("ACCESS DENIED!");
             }
         } else {
             echo "<br>" . handle_error("Failed to authenticate the user");
