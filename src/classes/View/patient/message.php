@@ -6,6 +6,17 @@ if (!$_SESSION["patient-login"]) {
     require_once __DIR__ . "/../../../../vendor/autoload.php";
     require_once __DIR__ . "/../../Models/userState.model.php";
 
+
+    $user = new User;
+    $deleteLoggedInUser = new loggedInUser;
+
+    $patientID =  $user->getUserID($_SESSION["patientEmail"]);
+    $communicatingDoctorID = $_GET["user_id"];
+
+    echo "<script>const patientID = {$patientID};</script>";
+    echo "<script>const communicatingDoctorID = {$communicatingDoctorID};</script>";
+
+
     if (isset($_POST["terminateComm"])) {
         echo $_GET["user_id"];
 
@@ -27,7 +38,6 @@ if (!$_SESSION["patient-login"]) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <style>
         #terminate-conversation {
             display: none;
@@ -57,6 +67,22 @@ if (!$_SESSION["patient-login"]) {
         .hover-send:hover {
             background-color: gray;
         }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+            padding: 5px 10px;
+            background-color: #eee;
+            border-radius: 20px;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -83,7 +109,7 @@ if (!$_SESSION["patient-login"]) {
         <div class="flex-1 overflow-y-auto p-4 space-y-4" id="chat-box"></div>
 
         <!-- Typing Indicator -->
-        <div id="typing-indicator" class="hidden p-4 text-gray-500 text-sm italic">Typing...</div>
+        <div id="typing" class="typing-indicator hidden p-4 text-gray-500 text-sm italic">typing... </div>
 
         <!-- Input Section -->
         <div class="p-4 border-t flex items-center">
@@ -106,24 +132,41 @@ if (!$_SESSION["patient-login"]) {
         </form>
     </div>
 
+    <!-- User Typing -->
+
+
     <script>
         const conn = new WebSocket('ws://localhost:8080');
         const chatBox = document.getElementById("chat-box");
         const messageInput = document.getElementById("message-input");
         const sendButton = document.getElementById("send-btn");
-        const typingIndicator = document.getElementById("typing-indicator");
+        const typingMessage = document.getElementsByClassName("hidden")[0];
         const statusCircle = document.getElementById("status-circle");
         const statusText = document.getElementById("status-text");
         const terminateConversation = document.getElementById("terminate-conversation");
         const returnBtn = document.getElementById("return-btn");
+
         const continueConversation = document.getElementById("continue-btn");
         const terminateBtn = document.getElementById("terminate-btn");
         let typingTimeout;
+
+
+
+        const userId = patientID; // patient's ID
+        const recipientId = communicatingDoctorID; //  doctor's ID
+        console.log(userId);
+        console.log(recipientId);
 
         conn.onopen = () => {
             console.log("Connected to WebSocket");
             statusCircle.classList.replace("bg-red-500", "bg-green-500");
             statusText.innerText = "Online";
+
+            // Send user ID upon connection
+            conn.send(JSON.stringify({
+                type: 'connect',
+                user_id: userId
+            }));
         };
 
         conn.onclose = () => {
@@ -132,25 +175,46 @@ if (!$_SESSION["patient-login"]) {
         };
 
         conn.onmessage = (e) => {
-            if (e.data === "typing...") {
-                typingIndicator.classList.remove("hidden");
-            } else if (e.data === "stop typing") {
-                typingIndicator.classList.add("hidden");
+            const data = JSON.parse(e.data);
+
+            if (data.type === 'typing') {
+                console.log("first yes");
+                typingMessage.classList.remove("hidden");
+            } else if (data.type === 'stop_typing') {
+                console.log("second yes");
+                typingMessage.classList.add("hidden");
             } else {
-                typingIndicator.classList.add("hidden");
-                displayMessage(e.data, "left");
+                console.log("test");
+                displayMessage(data.message, data.sender_id === userId ? "right" : "left");
             }
         };
+
+
+        conn.onerror = (error) => {
+            console.error("WebSocket Error:", error);
+        };
+
 
         function sendMessage() {
             const message = messageInput.value.trim();
             if (message) {
                 displayMessage(message, "right");
+
+                conn.send(JSON.stringify({
+                    type: 'message',
+                    message: message,
+                    sender_id: userId,
+                    recipient_id: recipientId
+                }));
+
                 conn.send(message);
                 messageInput.value = "";
                 conn.send("stop typing");
+
+                messageInput.value = "";
             }
         }
+
 
         function displayMessage(message, side) {
             const newMessage = document.createElement("div");
@@ -162,9 +226,19 @@ if (!$_SESSION["patient-login"]) {
 
         messageInput.addEventListener("input", () => {
             clearTimeout(typingTimeout);
-            conn.send("typing...");
-            typingTimeout = setTimeout(() => conn.send("stop typing"), 2000);
+            conn.send(JSON.stringify({
+                type: "typing",
+                user_id: userId
+            }));
+
+            typingTimeout = setTimeout(() => {
+                conn.send(JSON.stringify({
+                    type: "stop_typing",
+                    user_id: userId
+                }));
+            }, 1000);
         });
+
 
         sendButton.addEventListener("click", sendMessage);
 
@@ -174,6 +248,25 @@ if (!$_SESSION["patient-login"]) {
                 sendMessage();
             }
         });
+
+        // Detect typing
+        messageInput.addEventListener("input", () => {
+            conn.send(JSON.stringify({
+                type: "typing"
+            }));
+        });
+
+        // Detect stop typing (e.g., after 1 second of no input)
+
+        messageInput.addEventListener("keyup", () => {
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => {
+                conn.send(JSON.stringify({
+                    type: "stop_typing"
+                }));
+            }, 1000);
+        });
+
 
         returnBtn.addEventListener("click", () => {
             terminateConversation.style.display = "flex";
@@ -187,7 +280,7 @@ if (!$_SESSION["patient-login"]) {
             window.location.href = "dashboard.php";
         });
     </script>
-    <script src="../../../js/script.js"></script>
+    <!-- <script src="../../../js/script.js"></script> -->
 </body>
 
 </html>

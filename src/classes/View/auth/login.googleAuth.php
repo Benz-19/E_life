@@ -31,27 +31,48 @@ function getGoogleClient()
 function handleGoogleUser($google_id, $name, $email, $google_verified, $google_verification_code)
 {
     $user = new User();
+    $isLoggedIn = new loggedInUser;
+    $userPresence = "online";
+
     $existingUser = $user->getUserByGoogleId($google_id);
 
     if ($existingUser) {
         $user->updateUserDetailGoogle($existingUser['id'], $name, $email, $google_verified, $google_verification_code);
     } else {
-        $user->createUserDetailGoogle($name, $email, $google_verified, $google_verification_code, $google_id, $_SESSION['user_type']);
+        $user->createUserDetailGoogle($name, $email, $google_verified, $google_verification_code, $google_id, $_SESSION["user_type"]);
+        echo "session: " . $_SESSION["user_type"];
     }
 
     $_SESSION['user_id'] = $existingUser ? $existingUser['id'] : $user->getLastInsertId();
 
-    if ($_SESSION['user_type'] === "patient") {
+    if ($_SESSION["user_type"] === "patient") {
 
-        echo '<script type="text/javascript">
-                alert("Welcome! Redirecting to the dashboard...");
-                window.location.href = "../../../../public/../src/classes/View/patient/dashboard.php";
-              </script>';
-    } elseif ($_SESSION['user_type'] === "doctor") {
-        echo '<script type="text/javascript">
-                alert("Welcome! Redirecting to the dashboard...");
-                window.location.href = "../doctor/index.doctor.php";
-              </script>';
+        $_SESSION["patient-login"] = true;
+        $userID = $user->getUserID($email);
+        $_SESSION["patientEmail"] = $email;
+        $_SESSION["logged-in-patients"][0] = $user->getUserID($email);
+
+        //LOGIN the patient
+        if ($isLoggedIn->setLoggedInUser($userID, $email, $_SESSION["user_type"], $userPresence)) {
+            echo '<script type="text/javascript">
+            alert("Welcome! Redirecting to the dashboard...");
+            window.location.href = "../../../../public/../src/classes/View/patient/dashboard.php";
+          </script>';
+        }
+    } elseif ($_SESSION["user_type"] === "doctor") {
+
+        $_SESSION["doctor-login"] = true;
+        $userID = $user->getUserID($email);
+        $_SESSION["doctorEmail"] = $email;
+        $_SESSION["logged-in-doctors"][0] = $user->getUserID($email);
+
+        //LOGIN the user
+        if ($isLoggedIn->setLoggedInUser($userID, $email, $_SESSION["user_type"], $userPresence)) {
+            echo '<script type="text/javascript">
+            alert("Welcome! Redirecting to the dashboard...");
+            window.location.href = "../doctor/index.doctor.php";
+          </script>';
+        }
     } else {
         echo handle_error("User type not found");
         exit();

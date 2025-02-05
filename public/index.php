@@ -3,6 +3,8 @@ require __DIR__ . "/../vendor/autoload.php";
 include_once __DIR__ . "/../src/handle_error/handle_error.php";
 include_once __DIR__ . "/../src/classes/View/auth/login.auth.php";
 
+$user_type = "patient"; //Default assuming the user signs in directly from the general index page
+$_SESSION[`user_type`] = $user_type;
 // Redirect to the patient index.php page
 header("Location: ../src/classes/View/patient/index.php");
 // echo '<script type="text/javascript">window.location.href = "../src/classes/View/patient/dashboard.php";</script>';

@@ -6,7 +6,7 @@ include_once __DIR__ . "/../auth/login.auth.php";
 
 $user_type = "doctor";
 
-$_SESSION['user_type'] = $user_type;
+$_SESSION["user_type"] = $user_type;
 
 // Check if the user is already logged in
 if (isset($_SESSION['user_id'])) {

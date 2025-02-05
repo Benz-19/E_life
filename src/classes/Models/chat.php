@@ -11,6 +11,7 @@ class Chat implements MessageComponentInterface
     public function onOpen(ConnectionInterface $conn)
     {
         $this->clients[$conn->resourceId] = $conn;
+        echo "New connection! ({$conn->resourceId})\n";
     }
 
     public function onMessage(ConnectionInterface $from, $msg)
@@ -27,6 +28,28 @@ class Chat implements MessageComponentInterface
                 $this->userConnections[$userId] = $from;
                 break;
 
+            case 'typing':
+                // Notify the recipient that the sender is typing
+                $recipientId = $data['recipient_id'];
+                if (isset($this->userConnections[$recipientId])) {
+                    $this->userConnections[$recipientId]->send(json_encode([
+                        'type' => 'typing',
+                        'sender_id' => $data['sender_id']
+                    ]));
+                }
+                break;
+
+            case 'stop_typing':
+                // Notify the recipient that the sender stopped typing
+                $recipientId = $data['recipient_id'];
+                if (isset($this->userConnections[$recipientId])) {
+                    $this->userConnections[$recipientId]->send(json_encode([
+                        'type' => 'stop_typing',
+                        'sender_id' => $data['sender_id']
+                    ]));
+                }
+                break;
+
             case 'message':
                 // Ensure the recipient exists before sending
                 $recipientId = $data['recipient_id'];
@@ -40,6 +63,7 @@ class Chat implements MessageComponentInterface
                 break;
         }
     }
+
 
     public function onClose(ConnectionInterface $conn)
     {
