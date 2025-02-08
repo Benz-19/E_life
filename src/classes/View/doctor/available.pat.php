@@ -6,6 +6,7 @@ require __DIR__ . "/../../Models/userState.model.php";
 
 if (!isset($_SESSION["doctorEmail"])) {
     echo handle_error("Failed to provide more details.") . "<br>" . handle_error("Logging you out...");
+    echo "<script>setTimeout(() => { window.location.href = 'index.doctor.php'; }, 10000);</script>";
 } else {
     $loggedIn = new loggedInUser;
 

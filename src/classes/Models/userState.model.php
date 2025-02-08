@@ -47,4 +47,22 @@ class loggedInUser extends User
             echo handle_error("Unable to DELETE the logged-in user details...") . "<br>" . $error->getMessage();
         }
     }
+
+
+    public function startConversation($conversation_id, $sender_id, $receiver_id, $message)
+    {
+        try {
+            $sql = "INSERT INTO conversation (conversation_id, sender_id, receiver_id, message) VALUES (:conversation_id, :sender_id, :receiver_id, :message))";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([
+                ":conversation_id" => $conversation_id,
+                ":sender_id" => $sender_id,
+                ":receiver_id" => $receiver_id,
+                ":message" => $message
+            ]);
+            return true;
+        } catch (PDOException $error) {
+            echo handle_error("Unable to start a conversation...") . "<br>" . $error->getMessage();
+        }
+    }
 }
