@@ -36,7 +36,7 @@ function userSignIn($email, $password, $user_type)
                     echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
                 }
             } elseif ($user_type === $user->getUserTypeFromDB($email)) { //For the doctor -- check the user type from the database
-
+                session_start();
                 $_SESSION["doctor-login"] = true;
                 $userID = $user->getUserID($email);
                 $_SESSION["doctorEmail"] = $email;
