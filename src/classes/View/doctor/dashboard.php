@@ -5,11 +5,11 @@ include_once __DIR__ . "/../../../../vendor/autoload.php";
 
 $user = new User; //Doctor
 $doctorEmail =  $_SESSION["doctorEmail"];
+print_r($doctorEmail);
 $doctor_id = $user->getUserID($doctorEmail);
 echo "ID = {$doctor_id}";
 
 ?>
-
 
 
 

@@ -2,10 +2,8 @@
 
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
-use Database;
 
 include_once __DIR__ . "/database.php";
-include_once __DIR__ . "/userState.model.php";
 
 class Chat extends Database implements MessageComponentInterface
 {
@@ -21,10 +19,23 @@ class Chat extends Database implements MessageComponentInterface
     public function onMessage(ConnectionInterface $from, $msg)
     {
         $data = json_decode($msg, true);
-
+        print_r($data);
         if (!$data || !isset($data['type'])) {
             return;
         }
+
+        if ($data['type'] === 'message') {
+            $senderId = $data['sender_id'];
+            $recipientId = $data['recipient_id'];
+
+            foreach ($this->clients as $client) {
+                // Broadcast only to the sender and recipient
+                if ($client->userId === $recipientId || $client->userId === $senderId) {
+                    $client->send(json_encode($data));
+                }
+            }
+        }
+
 
         switch ($data['type']) {
             case 'connect':
@@ -35,7 +46,8 @@ class Chat extends Database implements MessageComponentInterface
 
             case 'typing':
                 // Notify the recipient that the sender is typing
-                $recipientId = $data['recipient_id'];
+                $recipientId = $data['recipient_id'] ?? null;
+
                 if (isset($this->userConnections[$recipientId])) {
                     $this->userConnections[$recipientId]->send(json_encode([
                         'type' => 'typing',
@@ -46,7 +58,8 @@ class Chat extends Database implements MessageComponentInterface
 
             case 'stop_typing':
                 // Notify the recipient that the sender stopped typing
-                $recipientId = $data['recipient_id'];
+                $recipientId = $data['recipient_id'] ?? null;
+
                 if (isset($this->userConnections[$recipientId])) {
                     $this->userConnections[$recipientId]->send(json_encode([
                         'type' => 'stop_typing',
@@ -54,11 +67,14 @@ class Chat extends Database implements MessageComponentInterface
                     ]));
                 }
                 break;
-
             case 'message':
-                // Save the message in the database and send it to the recipient
-                $recipientId = $data['recipient_id'];
-                $senderId = $data['sender_id'];
+                if (empty($data['sender_id']) || empty($data['recipient_id']) || empty($data['message'])) {
+                    echo "Invalid message data received.\n";
+                    return;
+                }
+                $recipientId = $data['recipient_id'] ?? null;
+
+                $senderId = $data['sender_id'] ?? null;
                 $message = $data['message'];
 
                 try {
@@ -93,21 +109,21 @@ class Chat extends Database implements MessageComponentInterface
     {
         try {
             $sql = "SELECT conversation_id FROM conversation 
-                    WHERE (sender_id = :sender_id AND receiver_id = :receiver_id) 
-                       OR (sender_id = :receiver_id AND receiver_id = :sender_id)";
+                WHERE (sender_id = :sender_id AND receiver_id = :receiver_id) 
+                   OR (sender_id = :receiver_id AND receiver_id = :sender_id)";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
                 ":sender_id" => $senderId,
                 ":receiver_id" => $receiverId
             ]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
             return $result ? $result['conversation_id'] : null;
         } catch (PDOException $error) {
             echo "Error fetching conversation ID: " . $error->getMessage();
             return null;
         }
     }
+
 
 
     public function onClose(ConnectionInterface $conn)
@@ -130,7 +146,7 @@ class Chat extends Database implements MessageComponentInterface
     public function startConversation($conversation_id, $sender_id, $receiver_id, $message)
     {
         try {
-            $sql = "INSERT INTO conversation (conversation_id, sender_id, receiver_id, message) VALUES (:conversation_id, :sender_id, :receiver_id, :message))";
+            $sql = "INSERT INTO conversation (conversation_id, sender_id, receiver_id, message) VALUES (:conversation_id, :sender_id, :receiver_id, :message)";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
                 ":conversation_id" => $conversation_id,
@@ -140,23 +156,38 @@ class Chat extends Database implements MessageComponentInterface
             ]);
             return true;
         } catch (PDOException $error) {
-            echo handle_error("Unable to start a conversation...") . "<br>" . $error->getMessage();
+            echo "Unable to start a conversation..." . "<br>" . $error->getMessage();
         }
     }
 
-    public function updateConversation($sender_id, $receiver_id, $message)
+    public function updateConversation($conversation_id, $sender_id, $message)
     {
         try {
-            $sql = "UPDATE conversation SET message = :message WHERE sender_id = :sender_id AND receiver_id = :receiver_id";
+            $sql = "UPDATE conversation SET message = :message WHERE conversation_id = :conversation_id";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
                 ":message" => $message,
-                ":sender_id" => $sender_id,
-                ":receiver_id" => $receiver_id
+                ":conversation_id" => $conversation_id
             ]);
             return true;
         } catch (PDOException $error) {
-            echo handle_error("Unable to update the conversation...") . "<br>" . $error->getMessage();
+            echo "Unable to update the conversation..." . "<br>" . $error->getMessage();
         }
+    }
+
+    public function getMessages($doctor_id, $patient_id)
+    {
+        $query = "SELECT * 
+                  FROM messages 
+                  WHERE (sender_id = :doctor_id AND recipient_id = :patient_id)
+                     OR (sender_id = :patient_id AND recipient_id = :doctor_id)
+                  ORDER BY created_at ASC";
+
+        $stmt = $this->Connection()->prepare($query);
+        $stmt->execute([
+            ':doctor_id' => $doctor_id,
+            ':patient_id' => $patient_id,
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

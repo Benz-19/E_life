@@ -157,49 +157,51 @@ if (!$_SESSION["patient-login"]) {
         console.log(userId);
         console.log(recipientId);
 
+
+        // Connection opened
         conn.onopen = () => {
             console.log("Connected to WebSocket");
             statusCircle.classList.replace("bg-red-500", "bg-green-500");
             statusText.innerText = "Online";
 
-            // Send user ID upon connection
+            // Notify server of connection
             conn.send(JSON.stringify({
                 type: 'connect',
                 user_id: userId
             }));
         };
 
+        // Connection closed
         conn.onclose = () => {
             statusCircle.classList.replace("bg-green-500", "bg-red-500");
             statusText.innerText = "Offline";
         };
 
+        // Handle incoming messages
         conn.onmessage = (e) => {
             const data = JSON.parse(e.data);
 
             if (data.type === 'typing') {
-                console.log("first yes");
                 typingMessage.classList.remove("hidden");
             } else if (data.type === 'stop_typing') {
-                console.log("second yes");
                 typingMessage.classList.add("hidden");
-            } else {
-                console.log("test");
+            } else if (data.type === 'message') {
                 displayMessage(data.message, data.sender_id === userId ? "right" : "left");
             }
         };
 
-
+        // Handle errors
         conn.onerror = (error) => {
             console.error("WebSocket Error:", error);
         };
 
-
+        // Send a message
         function sendMessage() {
             const message = messageInput.value.trim();
             if (message) {
                 displayMessage(message, "right");
 
+                // Send the message via WebSocket
                 conn.send(JSON.stringify({
                     type: 'message',
                     message: message,
@@ -207,15 +209,11 @@ if (!$_SESSION["patient-login"]) {
                     recipient_id: recipientId
                 }));
 
-                conn.send(message);
-                messageInput.value = "";
-                conn.send("stop typing");
-
                 messageInput.value = "";
             }
         }
 
-
+        // Display a message in the chat box
         function displayMessage(message, side) {
             const newMessage = document.createElement("div");
             newMessage.className = `flex justify-${side === "right" ? "end" : "start"}`;
@@ -224,30 +222,38 @@ if (!$_SESSION["patient-login"]) {
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
+        // Typing detection
         messageInput.addEventListener("input", () => {
             clearTimeout(typingTimeout);
             conn.send(JSON.stringify({
                 type: "typing",
-                user_id: userId
+                user_id: userId,
+                recipient_id: recipientId
             }));
 
             typingTimeout = setTimeout(() => {
                 conn.send(JSON.stringify({
                     type: "stop_typing",
-                    user_id: userId
+                    user_id: userId,
+                    recipient_id: recipientId
                 }));
             }, 1000);
         });
 
-
+        // Send a message when the send button is clicked
         sendButton.addEventListener("click", sendMessage);
 
+        // Send a message on pressing "Enter"
         messageInput.addEventListener("keydown", (e) => {
-            if (window.innerWidth > 768 && e.key === "Enter") {
+            if (e.key === "Enter") {
                 e.preventDefault();
                 sendMessage();
             }
         });
+
+
+
+
 
         // Detect typing
         messageInput.addEventListener("input", () => {

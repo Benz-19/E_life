@@ -24,7 +24,7 @@ function userSignIn($email, $password, $user_type)
 
             // Determine the user
 
-            if ($user_type === $user->getUserType($email)) { //For the patient  -- check the user type from the database
+            if ($user_type === $user->getUserTypeFromDB($email)) { //For the patient  -- check the user type from the database
 
                 $_SESSION["patient-login"] = true;
                 $userID = $user->getUserID($email);

@@ -3,7 +3,7 @@ session_start();
 
 include_once __DIR__ . "/../../../../vendor/autoload.php";
 
-$user = new User; //Doctor
+$user = new User; //Patient
 $patientEmail =  $_SESSION["patientEmail"];
 $patient_id = $user->getUserID($patientEmail);
 echo "ID = {$patient_id}";

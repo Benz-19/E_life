@@ -8,15 +8,16 @@ $user_type = "doctor";
 
 $_SESSION["user_type"] = $user_type;
 
+echo $_SESSION["user_type"];
 // Check if the user is already logged in
 if (isset($_SESSION['user_id'])) {
     echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
     exit();
 } else {
     // Sign in
-    if (isset($_POST['sign-in-btn'])) {
-        $email = $_POST['signInEmail'];
-        $password = $_POST['signInPassword'];
+    if (isset($_POST["sign-in-btn"])) {
+        $email = $_POST["signInEmail"];
+        $password = $_POST["signInPassword"];
 
         userSignIn($email, $password, $user_type); //function to sign in
     }

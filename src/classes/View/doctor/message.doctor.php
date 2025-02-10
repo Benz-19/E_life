@@ -15,7 +15,6 @@ if (!$_SESSION["doctor-login"]) {
     echo "<script>const doctorID = {$doctorID};</script>";
     echo "<script>const communicatingPatientID = {$communicatingPatientID};</script>";
 
-    $conversation_id = min($doctorID, $communicatingPatientID) + "_" + max($doctorID, $communicatingPatientID);
 
     if (isset($_POST["terminateComm"])) {
         echo $_GET["user_id"];
@@ -153,6 +152,21 @@ if (!$_SESSION["doctor-login"]) {
         const recipientId = communicatingPatientID; //  patient's ID
         console.log(userId);
         console.log(recipientId);
+
+
+        // Fetch messages when opening a chat
+        const loadChat = async (doctorId, patientId) => {
+            const response = await fetch(`/api/get-messages?doctor_id=${doctorId}&patient_id=${patientId}`);
+            const data = await response.json();
+
+            // Update the chat window with messages
+            displayMessages(data.messages);
+        };
+
+        // Example: Call this function when the doctor selects a patient from the chat list
+        loadChat(doctorId, patientId);
+
+
 
         // Connection opened
         conn.onopen = () => {

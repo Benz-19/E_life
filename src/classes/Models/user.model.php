@@ -283,4 +283,7 @@ class User extends Database
 
 
 // $test = new User;
-// $test->setUserDetailGoogle("Kingsley", "kings@gmail.com", "5555", true, 4449, 7);
+// // $test->setUserDetailGoogle("Kingsley", "kings@gmail.com", "5555", true, 4449, 7);
+// echo "<pre>";
+// print_r($test->getUserID("e.life.team.uk@gmail.com"));
+// echo "</pre>";

@@ -1,5 +1,4 @@
 <?php
-include_once __DIR__ . "/../../handle_error/handle_error.php";
 include_once "database.php";
 include "user.model.php";
 
@@ -19,7 +18,7 @@ class loggedInUser extends User
             ]);
             return true;
         } catch (PDOException $error) {
-            echo handle_error("Unable to set the logged-in user details...") . "<br>" . $error->getMessage();
+            echo "Unable to set the logged-in user details..." . "<br>" . $error->getMessage();
         }
     }
 
@@ -31,7 +30,7 @@ class loggedInUser extends User
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $error) {
-            echo handle_error("Unable to GET the logged-in user details...") . "<br>" . $error->getMessage();
+            echo "Unable to GET the logged-in user details..." . "<br>" . $error->getMessage();
         }
     }
 
@@ -44,7 +43,7 @@ class loggedInUser extends User
                 ":id" => $userID
             ]);
         } catch (PDOException $error) {
-            echo handle_error("Unable to DELETE the logged-in user details...") . "<br>" . $error->getMessage();
+            echo "Unable to DELETE the logged-in user details..." . "<br>" . $error->getMessage();
         }
     }
 }
