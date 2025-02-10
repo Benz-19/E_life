@@ -23,8 +23,18 @@ function userSignIn($email, $password, $user_type)
             $userPresence = "online"; // Set the user presence to online
 
             // Determine the user
+            if ($user_type === $user->getUserTypeFromDB($email)) { //For the doctor -- check the user type from the database
+                session_start();
+                $_SESSION['doctor-login'] = true;
+                $userID = $user->getUserID($email);
+                $_SESSION["doctorEmail"] = $email;
+                $_SESSION["logged-in-doctors"][0] = $user->getUserID($email);
 
-            if ($user_type === $user->getUserTypeFromDB($email)) { //For the patient  -- check the user type from the database
+                //LOGIN the user
+                if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type, $userPresence)) {
+                    echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
+                }
+            } elseif ($user_type === $user->getUserTypeFromDB($email)) { //For the patient  -- check the user type from the database
 
                 $_SESSION["patient-login"] = true;
                 $userID = $user->getUserID($email);
@@ -32,17 +42,6 @@ function userSignIn($email, $password, $user_type)
                 $_SESSION["logged-in-patients"][0] = $user->getUserID($email);
 
                 //LOGIN the patient
-                if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type, $userPresence)) {
-                    echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
-                }
-            } elseif ($user_type === $user->getUserTypeFromDB($email)) { //For the doctor -- check the user type from the database
-                session_start();
-                $_SESSION["doctor-login"] = true;
-                $userID = $user->getUserID($email);
-                $_SESSION["doctorEmail"] = $email;
-                $_SESSION["logged-in-doctors"][0] = $user->getUserID($email);
-
-                //LOGIN the user
                 if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type, $userPresence)) {
                     echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
                 }

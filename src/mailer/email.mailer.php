@@ -42,6 +42,7 @@ function sendWithMailerSend($recipientAddress, $recipientName, $subject, $body)
         } else {
             // Log the error with the full response for debugging
             throw new Exception("MailerSend failed with response: " . json_encode($response));
+            return false;
         }
     } catch (Exception $e) {
         // Log the error message and return false
