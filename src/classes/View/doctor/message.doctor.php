@@ -20,7 +20,7 @@ if (!$_SESSION["doctor-login"]) {
     if (isset($_POST["terminateComm"])) {
         echo $_GET["user_id"];
         $LoggedInUser->updateLoggedInUserState("available", $doctorID); //updates the doctor's state to available
-        $LoggedInUser->removeLoggedInUser($user->getUserID($_SESSION["doctorEmail"]));
+        // $LoggedInUser->removeLoggedInUser($user->getUserID($_SESSION["doctorEmail"])); //remove the doctor's chat
         header("Location: dashboard.php");
         exit();
     }

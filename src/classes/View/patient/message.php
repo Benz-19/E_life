@@ -16,12 +16,15 @@ if (!$_SESSION["patient-login"]) {
     echo "<script>const patientID = {$patientID};</script>";
     echo "<script>const communicatingDoctorID = {$communicatingDoctorID};</script>";
 
+    $LoggedInUser->updateLoggedInUserState("busy", $patientID); //updates the patient's state to 'busy' when consulting a doctor
+
 
     if (isset($_POST["terminateComm"])) {
         echo $_GET["user_id"];
 
         $deleteLoggedInUser = new loggedInUser;
-        $deleteLoggedInUser->removeLoggedInUser($deleteLoggedInUser->getUserID($_SESSION["patientEmail"]));
+        $LoggedInUser->updateLoggedInUserState("available", $patientID);
+        // $deleteLoggedInUser->removeLoggedInUser($deleteLoggedInUser->getUserID($_SESSION["patientEmail"]));
         header("Location: dashboard.php");
         exit();
     }
