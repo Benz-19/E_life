@@ -34,6 +34,11 @@ if (!isset($_SESSION["patientEmail"])) {
         .offline-dot {
             background-color: #d1d5db;
         }
+
+        .disabled {
+            pointer-events: none;
+            opacity: 0.6;
+        }
     </style>
 </head>
 
@@ -44,16 +49,18 @@ if (!isset($_SESSION["patientEmail"])) {
             <?php if (!empty($users)) : ?>
                 <ul class="divide-y divide-gray-200">
                     <?php foreach ($users as $user) : ?>
-                        <!-- Filter for the patients ONLY -->
                         <?php if ($user["user_type"] === "doctor") : ?>
-                            <li class="flex items-center p-4 hover:bg-gray-50 cursor-pointer"
-                                onclick="handleSelectUser('<?php echo $user['user_id']; ?>')">
+                            <li class="flex items-center p-4 hover:bg-gray-50 cursor-pointer <?php echo $user['presence'] === 'busy' ? 'disabled' : ''; ?>"
+                                onclick="handleSelectUser(event, '<?php echo $user['user_id']; ?>', '<?php echo $user['presence']; ?>')">
                                 <img src="../../../../public/images/user.png" alt="User Avatar" class="w-12 h-12 rounded-full mr-4">
                                 <div class="flex-grow">
                                     <div class="text-lg font-medium text-gray-800"><?php echo $user['user_name']; ?></div>
                                     <div class="text-sm text-gray-500">ID: <?php echo $user['user_id']; ?> | Type:
                                         <?php echo ucfirst($user['user_type']); ?>
                                     </div>
+                                    <?php if ($user["presence"] === "busy"): ?>
+                                        <div class="text-sm text-red-500 font-semibold mt-1">Doctor is currently busy with another patient. Please try again later.</div>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <?php if ($user["presence"] === "available"): ?>
@@ -76,7 +83,12 @@ if (!isset($_SESSION["patientEmail"])) {
     </div>
 
     <script>
-        function handleSelectUser(userId) {
+        function handleSelectUser(event, userId, presence) {
+            if (presence === 'busy') {
+                event.preventDefault();
+                alert("The doctor is currently busy with another patient. Please try again later.");
+                return;
+            }
             window.location.href = `./message.php?user_id=${userId}`;
         }
     </script>

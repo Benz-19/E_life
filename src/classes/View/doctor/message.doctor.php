@@ -2,6 +2,7 @@
 session_start();
 if (!$_SESSION["doctor-login"]) {
     echo '<script type="text/javascript">window.location = "index.doctor.php"</script>';
+    exit();
 } else {
     require_once __DIR__ . "/../../../../vendor/autoload.php";
     require_once __DIR__ . "/../../Models/userState.model.php";
