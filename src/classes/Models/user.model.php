@@ -177,7 +177,7 @@ class User extends Database
             // var_dump($user);
 
             if ($user) {
-                $passwordCheck = password_verify($this->userPassword, $user['password']) || $this->userPassword === $user['password'] ? true : false;
+                $passwordCheck =  $this->userPassword === $user['password'] || password_verify($this->userPassword, $user['password'])  ? true : false;
                 if ($passwordCheck) {
                     // echo "User authenticated";
                     return true;
