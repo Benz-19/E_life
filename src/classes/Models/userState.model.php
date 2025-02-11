@@ -34,6 +34,20 @@ class loggedInUser extends User
         }
     }
 
+    public function updateLoggedInUserState($newPresence, $id)
+    {
+        try {
+            $sql = "UPDATE logged_in_users SET presence = :presence WHERE user_id = :id";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([
+                ":presence" => $newPresence,
+                ":id" => $id
+            ]);
+        } catch (PDOException $error) {
+            echo "Unable to Update the logged-in user details..." . "<br>" . $error->getMessage();
+        }
+    }
+
     public function removeLoggedInUser($userID)
     {
         try {

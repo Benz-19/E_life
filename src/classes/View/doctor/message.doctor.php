@@ -15,9 +15,11 @@ if (!$_SESSION["doctor-login"]) {
     echo "<script>const doctorID = {$doctorID};</script>";
     echo "<script>const communicatingPatientID = {$communicatingPatientID};</script>";
 
+    $LoggedInUser->updateLoggedInUserState("busy", $doctorID); //updates the doctor's state to 'busy' when consulting a patient
 
     if (isset($_POST["terminateComm"])) {
         echo $_GET["user_id"];
+        $LoggedInUser->updateLoggedInUserState("available", $doctorID); //updates the doctor's state to available
         $LoggedInUser->removeLoggedInUser($user->getUserID($_SESSION["doctorEmail"]));
         header("Location: dashboard.php");
         exit();
@@ -124,10 +126,13 @@ if (!$_SESSION["doctor-login"]) {
             <p class="italic">By clicking OK, all your conversation here will be deleted permanently.</p>
             <div class="flex justify-between mt-4">
                 <button id="continue-btn" class="bg-gray-500 text-white px-3 py-2 rounded-lg hover-send">CANCEL</button>
-                <button id="terminate-btn" class="bg-red-500 text-white px-5 py-2 rounded-lg hover-send">OK</button>
+                <button id="terminate-btn" class="bg-red-500 text-white px-5 py-2 rounded-lg hover-send" name="terminateComm">OK</button>
             </div>
         </form>
     </div>
+
+
+
 
     <script>
         const conn = new WebSocket('ws://localhost:8080');
