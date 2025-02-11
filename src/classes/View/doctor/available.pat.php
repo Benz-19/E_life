@@ -57,7 +57,12 @@ if (!isset($_SESSION["doctorEmail"])) {
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-sm text-green-500"><?php echo $user['presence']; ?></span>
+                                    <?php if ($user["presence"] === "available"): ?>
+                                        <span class="text-sm text-green-500"><?php echo $user['presence']; ?></span>
+                                    <?php endif ?>
+                                    <?php if ($user["presence"] === "busy"): ?>
+                                        <span class="text-sm text-red-500"><?php echo $user['presence']; ?></span>
+                                    <?php endif ?>
                                 </div>
                             </li>
                         <?php endif; ?>

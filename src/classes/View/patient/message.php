@@ -8,7 +8,7 @@ if (!$_SESSION["patient-login"]) {
 
 
     $user = new User;
-    $deleteLoggedInUser = new loggedInUser;
+    $LoggedInUser = new loggedInUser;
 
     $patientID =  $user->getUserID($_SESSION["patientEmail"]);
     $communicatingDoctorID = $_GET["user_id"];
@@ -22,7 +22,7 @@ if (!$_SESSION["patient-login"]) {
     if (isset($_POST["terminateComm"])) {
         echo $_GET["user_id"];
 
-        $deleteLoggedInUser = new loggedInUser;
+        $LoggedInUser = new loggedInUser;
         $LoggedInUser->updateLoggedInUserState("available", $patientID);
         // $deleteLoggedInUser->removeLoggedInUser($deleteLoggedInUser->getUserID($_SESSION["patientEmail"]));
         header("Location: dashboard.php");
