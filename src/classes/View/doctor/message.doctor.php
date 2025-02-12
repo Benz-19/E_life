@@ -29,9 +29,15 @@ if (!$_SESSION["doctor-login"]) {
 
 // Preventing return to the previous page.
 echo '<script type="text/javascript">
-    function preventBack(){window.history.forward()};
+
+    var triggerReturnButton = false;
+
+    function preventBack(){window.history.forward();
+    triggerReturnButton = true;
+    };
     setTimeout("preventBack()", 0);
     window.onunload = function(){null;}
+
 </script>
 ';
 ?>
@@ -292,6 +298,30 @@ echo '<script type="text/javascript">
         terminateBtn.addEventListener("click", () => {
             window.location.href = "dashboard.php";
         });
+
+        if (triggerReturnButton) {
+
+            window.addEventListener("popstate", function(event) {
+                if (event.state !== null) { // Only trigger when user presses Back
+                    terminateConversation.style.display = "flex";
+                    history.pushState({
+                        page: "current"
+                    }, "", location.href); // Push state back to prevent further Back navigation
+                }
+                console.log(triggerReturnButton);
+
+            });
+
+
+            continueConversation.addEventListener("click", () => {
+                terminateConversation.style.display = "none";
+            });
+
+            terminateBtn.addEventListener("click", () => {
+                window.location.href = "dashboard.php";
+            });
+
+        }
     </script>
     <!-- <script src="../../../js/script.js"></script> -->
 </body>

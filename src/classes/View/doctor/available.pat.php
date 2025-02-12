@@ -19,10 +19,16 @@ if (!isset($_SESSION["doctorEmail"])) {
 }
 
 // Preventing return to the previous page.
-echo '    <script type="text/javascript">
-    function preventBack(){window.history.forward()};
+echo '<script type="text/javascript">
+
+    var triggerReturnButton = false;
+
+    function preventBack(){window.history.forward();
+    triggerReturnButton = true;
+    };
     setTimeout("preventBack()", 0);
     window.onunload = function(){null;}
+
 </script>
 ';
 ?>
@@ -48,6 +54,27 @@ echo '    <script type="text/javascript">
         .disabled {
             pointer-events: none;
             opacity: 0.6;
+        }
+
+        #terminate-conversation {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .terminate-content {
+            background-color: rgb(212, 205, 195);
+            padding: 20px;
+            border-radius: 9px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -92,6 +119,18 @@ echo '    <script type="text/javascript">
         </div>
     </div>
 
+    <!-- Termination Confirmation Modal -->
+    <div id="terminate-conversation">
+        <form method="post" class="terminate-content">
+            <h4 class="font-bold">NOTE:</h4>
+            <p class="italic">By clicking OK, all your conversation here will be deleted permanently.</p>
+            <div class="flex justify-between mt-4">
+                <button id="continue-btn" class="bg-gray-500 text-white px-3 py-2 rounded-lg hover-send">CANCEL</button>
+                <button id="terminate-btn" class="bg-red-500 text-white px-5 py-2 rounded-lg hover-send" name="terminateComm">OK</button>
+            </div>
+        </form>
+    </div>
+
     <script>
         function handleSelectUser(event, userId, presence) {
             if (presence === 'busy') {
@@ -100,6 +139,42 @@ echo '    <script type="text/javascript">
                 return;
             }
             window.location.href = `./message.doctor.php?user_id=${userId}`;
+        }
+
+        returnBtn.addEventListener("click", () => {
+            terminateConversation.style.display = "flex";
+        });
+
+        continueConversation.addEventListener("click", () => {
+            terminateConversation.style.display = "none";
+        });
+
+        terminateBtn.addEventListener("click", () => {
+            window.location.href = "dashboard.php";
+        });
+
+
+        if (triggerReturnButton) {
+
+            window.addEventListener("popstate", function(event) {
+                if (event.state !== null) { // Only trigger when user presses Back
+                    terminateConversation.style.display = "flex";
+                    history.pushState({
+                        page: "current"
+                    }, "", location.href); // Push state back to prevent further Back navigation
+                }
+            });
+
+
+            continueConversation.addEventListener("click", () => {
+                terminateConversation.style.display = "none";
+            });
+
+            terminateBtn.addEventListener("click", () => {
+                window.location.href = "dashboard.php";
+            });
+            console.log(triggerReturnButton);
+
         }
     </script>
 </body>
