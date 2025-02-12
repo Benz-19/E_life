@@ -16,6 +16,14 @@ if (!isset($_SESSION["patientEmail"])) {
         echo handle_error("Failed to fetch logged-in users.") . "<br>" . $e->getMessage();
     }
 }
+
+// Preventing return to the previous page.
+echo '    <script type="text/javascript">
+    function preventBack(){window.history.forward()};
+    setTimeout("preventBack()", 0);
+    window.onunload = function(){null;}
+</script>
+';
 ?>
 
 <!DOCTYPE html>
