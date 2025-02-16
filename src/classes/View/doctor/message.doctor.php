@@ -301,27 +301,14 @@ echo '<script type="text/javascript">
 
         if (triggerReturnButton) {
 
-            window.addEventListener("popstate", function(event) {
-                if (event.state !== null) { // Only trigger when user presses Back
-                    terminateConversation.style.display = "flex";
-                    history.pushState({
-                        page: "current"
-                    }, "", location.href); // Push state back to prevent further Back navigation
-                }
-                console.log(triggerReturnButton);
+            terminateConversation.style.display = "flex";
 
-            });
+            console.log(triggerReturnButton);
 
-
-            continueConversation.addEventListener("click", () => {
-                terminateConversation.style.display = "none";
-            });
-
-            terminateBtn.addEventListener("click", () => {
-                window.location.href = "dashboard.php";
-            });
 
         }
+
+        terminateConversation.style.display = "none";
     </script>
     <!-- <script src="../../../js/script.js"></script> -->
 </body>
