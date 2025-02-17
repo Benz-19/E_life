@@ -150,6 +150,10 @@ echo '<script type="text/javascript">
 
 
     <script>
+        // =============================
+        // 🟢 WebSocket Chat Handling
+        // =============================
+
         const conn = new WebSocket('ws://localhost:8080');
         const chatBox = document.getElementById("chat-box");
         const messageInput = document.getElementById("message-input");
@@ -164,18 +168,12 @@ echo '<script type="text/javascript">
         const terminateBtn = document.getElementById("terminate-btn");
         let typingTimeout;
 
-        if (typingMessage.classList.contains("hidden")) {
-            console.log("yes");
-        }
+        const userId = doctorID; // Doctor's ID
+        const recipientId = communicatingPatientID; // Patient's ID
 
-        const userId = doctorID; // doctor's ID
-        const recipientId = communicatingPatientID; //  patient's ID
-        console.log(userId);
-        console.log(recipientId);
+        console.log(userId, recipientId);
 
-
-
-        // Connection opened
+        // WebSocket Connection Opened
         conn.onopen = () => {
             console.log("Connected to WebSocket");
             statusCircle.classList.replace("bg-red-500", "bg-green-500");
@@ -188,13 +186,13 @@ echo '<script type="text/javascript">
             }));
         };
 
-        // Connection closed
+        // WebSocket Connection Closed
         conn.onclose = () => {
             statusCircle.classList.replace("bg-green-500", "bg-red-500");
             statusText.innerText = "Offline";
         };
 
-        // Handle incoming messages
+        // Handle Incoming Messages
         conn.onmessage = (e) => {
             const data = JSON.parse(e.data);
 
@@ -207,18 +205,18 @@ echo '<script type="text/javascript">
             }
         };
 
-        // Handle errors
+        // WebSocket Error Handling
         conn.onerror = (error) => {
             console.error("WebSocket Error:", error);
         };
 
-        // Send a message
+        // Send a Message via WebSocket
         function sendMessage() {
             const message = messageInput.value.trim();
             if (message) {
                 displayMessage(message, "right");
 
-                // Send the message via WebSocket
+                // Send message via WebSocket
                 conn.send(JSON.stringify({
                     type: 'message',
                     message: message,
@@ -226,11 +224,14 @@ echo '<script type="text/javascript">
                     recipient_id: recipientId
                 }));
 
+                // Also send message to chatAPI.php (Database Backup)
+                sendMessageToAPI(message);
+
                 messageInput.value = "";
             }
         }
 
-        // Display a message in the chat box
+        // Display a Message in the Chat Box
         function displayMessage(message, side) {
             const newMessage = document.createElement("div");
             newMessage.className = `flex justify-${side === "right" ? "end" : "start"}`;
@@ -239,7 +240,7 @@ echo '<script type="text/javascript">
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        // Typing detection
+        // Typing Detection
         messageInput.addEventListener("input", () => {
             clearTimeout(typingTimeout);
             conn.send(JSON.stringify({
@@ -257,10 +258,10 @@ echo '<script type="text/javascript">
             }, 1000);
         });
 
-        // Send a message when the send button is clicked
+        // Send a Message when the Send Button is Clicked
         sendButton.addEventListener("click", sendMessage);
 
-        // Send a message on pressing "Enter"
+        // Send a Message on Pressing "Enter"
         messageInput.addEventListener("keydown", (e) => {
             if (e.key === "Enter") {
                 e.preventDefault();
@@ -268,15 +269,14 @@ echo '<script type="text/javascript">
             }
         });
 
-
-        // Detect typing
+        // Detect Typing Start
         messageInput.addEventListener("input", () => {
             conn.send(JSON.stringify({
                 type: "typing"
             }));
         });
 
-        // Detect stop typing (e.g., after 1 second of no input)
+        // Detect Stop Typing (1 sec of inactivity)
         messageInput.addEventListener("keyup", () => {
             clearTimeout(typingTimeout);
             typingTimeout = setTimeout(() => {
@@ -286,7 +286,7 @@ echo '<script type="text/javascript">
             }, 1000);
         });
 
-
+        // Return Button Logic
         returnBtn.addEventListener("click", () => {
             terminateConversation.style.display = "flex";
         });
@@ -300,17 +300,67 @@ echo '<script type="text/javascript">
         });
 
         if (triggerReturnButton) {
-
             terminateConversation.style.display = "flex";
-
             console.log(triggerReturnButton);
-
-
         }
 
         terminateConversation.style.display = "none";
+
+        // =============================
+        // 🟢 AJAX Requests to chatAPI.php
+        // =============================
+
+        // Fetch Old Messages from chatAPI.php
+        function fetchOldMessages() {
+            fetch('chatAPI.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'fetch_messages',
+                        user_id: userId,
+                        recipient_id: recipientId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        data.messages.forEach(msg => {
+                            displayMessage(msg.message, msg.sender_id == userId ? "right" : "left");
+                        });
+                    }
+                })
+                .catch(error => console.error('Error fetching messages:', error));
+        }
+
+        // Store Sent Messages in chatAPI.php
+        function sendMessageToAPI(message) {
+            fetch('chatAPI.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'send_message',
+                        message: message,
+                        sender_id: userId,
+                        recipient_id: recipientId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        console.error('Error saving message:', data.error);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Call fetchOldMessages when the chat page loads
+        fetchOldMessages();
     </script>
-    <!-- <script src="../../../js/script.js"></script> -->
+
 </body>
 
 </html>
