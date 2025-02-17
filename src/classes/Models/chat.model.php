@@ -95,4 +95,17 @@ class ChatModel extends Database
             return [];
         }
     }
+
+    public function deleteSavedConversation($conversation_id)
+    {
+        try {
+            $sql = "DELETE FROM conversation WHERE conversation_id = :conversation_id";
+            $stmt = $this->Connection()->query($sql);
+            $stmt->execute([':conversation_id' => $conversation_id]);
+            return true;
+        } catch (PDOException $error) {
+            echo "Error fetching messages: " . $error->getMessage();
+            return false;
+        }
+    }
 }
