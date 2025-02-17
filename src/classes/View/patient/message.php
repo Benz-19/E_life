@@ -27,7 +27,6 @@ if (!$_SESSION["patient-login"]) {
         echo $_GET["user_id"];
 
         if ($conversation_id !== null) {
-            $LoggedInUser = new loggedInUser;
             $LoggedInUser->updateLoggedInUserState("available", $patientID);
             // $deleteLoggedInUser->removeLoggedInUser($deleteLoggedInUser->getUserID($_SESSION["patientEmail"]));
 
