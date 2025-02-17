@@ -368,7 +368,8 @@ class ComposerStaticInit2185d2f99bcd56787481d9357a5972d3
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'BaseSendGridClientInterface' => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/BaseSendGridClientInterface.php',
-        'Chat' => __DIR__ . '/../..' . '/src/classes/Models/chat.php',
+        'Chat' => __DIR__ . '/../..' . '/src/classes/Models/webSocketChat.php',
+        'ChatModel' => __DIR__ . '/../..' . '/src/classes/Models/chat.model.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Database' => __DIR__ . '/../..' . '/src/classes/Models/database.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',

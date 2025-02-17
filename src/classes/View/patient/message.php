@@ -5,12 +5,11 @@ if (!$_SESSION["patient-login"]) {
 } else {
     require_once __DIR__ . "/../../../../vendor/autoload.php";
     require_once __DIR__ . "/../../Models/userState.model.php";
-    require_once __DIR__ . "/../../Models/chat.model.php";
 
 
     $user = new User;
     $LoggedInUser = new loggedInUser;
-    $chat  = new ChatModel;
+    $chat = new ChatModel;
 
     $patientID =  $user->getUserID($_SESSION["patientEmail"]);
     $communicatingDoctorID = $_GET["user_id"];
@@ -20,15 +19,14 @@ if (!$_SESSION["patient-login"]) {
 
     $LoggedInUser->updateLoggedInUserState("busy", $patientID); //updates the patient's state to 'busy' when consulting a doctor
 
-    var_dump($_SESSION["conversation_id"]);
-    $val = $chat->getConversationId($patientID, $communicatingDoctorID);
-    echo "<br>";
-    var_dump($val);
+    $conversation_id = $chat->getConversationId($patientID, $communicatingDoctorID);
+    var_dump($conversation_id);
+
 
     if (isset($_POST["terminateComm"])) {
         echo $_GET["user_id"];
 
-        if ($_SESSION["conversation_id"] !== null) {
+        if ($conversation_id !== null) {
             $LoggedInUser = new loggedInUser;
             $LoggedInUser->updateLoggedInUserState("available", $patientID);
             // $deleteLoggedInUser->removeLoggedInUser($deleteLoggedInUser->getUserID($_SESSION["patientEmail"]));

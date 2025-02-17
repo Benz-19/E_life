@@ -3,7 +3,7 @@
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-
+include_once __DIR__ . "/../../../vendor/autoload.php";
 include "chat.model.php";
 
 class Chat extends ChatModel implements MessageComponentInterface
@@ -81,7 +81,7 @@ class Chat extends ChatModel implements MessageComponentInterface
                 try {
                     // Save the message in the database
                     $conversationId = $this->getConversationId($senderId, $recipientId);
-                    $_SESSION["conversation_id"] = $conversationId;
+
                     if ($conversationId) {
                         // $this->updateConversation($conversationId, $senderId, $message);
                         $this->setConversation($conversationId, $senderId, $recipientId, $message);

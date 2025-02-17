@@ -8,7 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'BaseSendGridClientInterface' => $vendorDir . '/sendgrid/sendgrid/lib/BaseSendGridClientInterface.php',
-    'Chat' => $baseDir . '/src/classes/Models/chat.php',
+    'Chat' => $baseDir . '/src/classes/Models/webSocketChat.php',
+    'ChatModel' => $baseDir . '/src/classes/Models/chat.model.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Database' => $baseDir . '/src/classes/Models/database.php',
     'DateError' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
