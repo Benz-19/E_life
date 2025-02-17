@@ -29,7 +29,7 @@ if (!$_SESSION["patient-login"]) {
         if ($conversation_id !== null) {
             $LoggedInUser->updateLoggedInUserState("available", $patientID);
             // $deleteLoggedInUser->removeLoggedInUser($deleteLoggedInUser->getUserID($_SESSION["patientEmail"]));
-
+            $chat->deleteSavedConversation($conversation_id); // deletes all the conversations btw the doctor and patient when they exit the app
             header("Location: dashboard.php");
             exit();
         } else {
