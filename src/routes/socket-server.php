@@ -6,7 +6,7 @@ use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
 
 require dirname(__DIR__) . '/../vendor/autoload.php';
-require __DIR__ . '/../classes/Models/chat.php';
+require __DIR__ . '/../classes/Models/webSocketChat.php';
 $server = IoServer::factory(
     new HttpServer(
         new WsServer(

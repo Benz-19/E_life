@@ -3,9 +3,9 @@
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-include_once __DIR__ . "/database.php";
+include_once __DIR__ . "/chat.model.php";
 
-class Chat extends Database implements MessageComponentInterface
+class Chat extends ChatModel implements MessageComponentInterface
 {
     protected $clients = [];
     protected $userConnections = []; // Stores user ID -> connection mapping
@@ -102,28 +102,6 @@ class Chat extends Database implements MessageComponentInterface
         }
     }
 
-    /**
-     * Get the conversation ID between two users.
-     */
-    private function getConversationId($senderId, $receiverId)
-    {
-        try {
-            $sql = "SELECT conversation_id FROM conversation 
-                WHERE (sender_id = :sender_id AND receiver_id = :receiver_id) 
-                   OR (sender_id = :receiver_id AND receiver_id = :sender_id)";
-            $stmt = $this->Connection()->prepare($sql);
-            $stmt->execute([
-                ":sender_id" => $senderId,
-                ":receiver_id" => $receiverId
-            ]);
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result ? $result['conversation_id'] : null;
-        } catch (PDOException $error) {
-            echo "Error fetching conversation ID: " . $error->getMessage();
-            return null;
-        }
-    }
-
 
 
     public function onClose(ConnectionInterface $conn)
@@ -140,54 +118,5 @@ class Chat extends Database implements MessageComponentInterface
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
         $conn->close();
-    }
-
-
-    public function startConversation($conversation_id, $sender_id, $receiver_id, $message)
-    {
-        try {
-            $sql = "INSERT INTO conversation (conversation_id, sender_id, receiver_id, message) VALUES (:conversation_id, :sender_id, :receiver_id, :message)";
-            $stmt = $this->Connection()->prepare($sql);
-            $stmt->execute([
-                ":conversation_id" => $conversation_id,
-                ":sender_id" => $sender_id,
-                ":receiver_id" => $receiver_id,
-                ":message" => $message
-            ]);
-            return true;
-        } catch (PDOException $error) {
-            echo "Unable to start a conversation..." . "<br>" . $error->getMessage();
-        }
-    }
-
-    public function updateConversation($conversation_id, $sender_id, $message)
-    {
-        try {
-            $sql = "UPDATE conversation SET message = :message WHERE conversation_id = :conversation_id";
-            $stmt = $this->Connection()->prepare($sql);
-            $stmt->execute([
-                ":message" => $message,
-                ":conversation_id" => $conversation_id
-            ]);
-            return true;
-        } catch (PDOException $error) {
-            echo "Unable to update the conversation..." . "<br>" . $error->getMessage();
-        }
-    }
-
-    public function getMessages($doctor_id, $patient_id)
-    {
-        $query = "SELECT * 
-                  FROM messages 
-                  WHERE (sender_id = :doctor_id AND recipient_id = :patient_id)
-                     OR (sender_id = :patient_id AND recipient_id = :doctor_id)
-                  ORDER BY created_at ASC";
-
-        $stmt = $this->Connection()->prepare($query);
-        $stmt->execute([
-            ':doctor_id' => $doctor_id,
-            ':patient_id' => $patient_id,
-        ]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
