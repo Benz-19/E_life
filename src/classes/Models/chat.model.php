@@ -23,6 +23,25 @@ class ChatModel extends Database
         }
     }
 
+    public function setConversation($conversation_id, $sender_id, $receiver_id, $message)
+    {
+        try {
+            $sql = "INSERT INTO conversation (conversation_id, sender_id, receiver_id, message) 
+                    VALUES (:conversation_id, :sender_id, :receiver_id, :message)";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([
+                ":conversation_id" => $conversation_id,
+                ":sender_id" => $sender_id,
+                ":receiver_id" => $receiver_id,
+                ":message" => $message
+            ]);
+            return true;
+        } catch (PDOException $error) {
+            echo "Unable to start a conversation: " . $error->getMessage();
+            return false;
+        }
+    }
+
     public function startConversation($conversation_id, $sender_id, $receiver_id, $message)
     {
         try {

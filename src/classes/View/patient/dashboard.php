@@ -7,6 +7,8 @@ $user = new User; //Patient
 $patientEmail =  $_SESSION["patientEmail"];
 $patient_id = $user->getUserID($patientEmail);
 echo "ID = {$patient_id}";
+
+$SESSION["conversation_id"] = NULL; //set the conversation ID to be NULL initially
 ?>
 
 
