@@ -35,7 +35,7 @@ echo "ID = {$_SESSION["user_id"]}";
             cursor: pointer;
             font-size: 24px;
             padding: 0 12px;
-            color: white;
+            color: black;
         }
 
         #notification-container::after {
