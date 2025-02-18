@@ -18,11 +18,58 @@ echo "ID = {$doctor_id}";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Link to Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../../../../public/css/patient.css">
     <title>Document</title>
     <style>
         html {
             scroll-behavior: smooth;
+        }
+
+        #notification-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 0 12px;
+            color: white;
+        }
+
+        #notification-container::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease-in-out;
+            opacity: 0;
+            white-space: nowrap;
+        }
+
+        #notification-container:hover::after {
+            content: "notifications";
+            font-size: 12px;
+            opacity: 1;
+        }
+
+        #notification-bell {
+            color: #333;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background: red;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 3px 7px;
+            border-radius: 50%;
+            display: none;
+            /* Initially hidden */
         }
     </style>
 </head>
@@ -36,6 +83,7 @@ echo "ID = {$doctor_id}";
                         <img src="../../../../public/images/medical_logo.png" alt="Health Logo" class="h-10 mr-3">
                         <div class="text-xl font-semibold text-gray-800">E-LIFE</div>
                     </a>
+
                     <div class="relative">
                         <img src="../../../../public/images/user.png" alt="User" class="h-10 w-10 rounded-full cursor-pointer" id="userMenuToggle">
                         <div class="dropdown hidden absolute right-0 z-20 mt-2 w-48 bg-white rounded-lg shadow-lg" id="userDropdown">
@@ -45,6 +93,12 @@ echo "ID = {$doctor_id}";
                             <a href="#logout" class="block px-4 py-2 text-gray-800 hover:bg-gray-200 mx-card">Logout</a>
                         </div>
                     </div>
+                </div>
+
+                <!-- Notification -->
+                <div id="notification-container">
+                    <i class="fa fa-bell" id="notification-bell"></i>
+                    <span id="notification-count" class="badge">0</span>
                 </div>
             </div>
         </header>
@@ -127,6 +181,34 @@ echo "ID = {$doctor_id}";
             featuresSection.scrollIntoView({
                 behavior: 'smooth', // Smooth scroll
                 block: 'start' // Scroll to the top of the section
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            function fetchNotifications() {
+                fetch("http://your-api-endpoint/notifications/unread?user_id=1")
+                    .then(response => response.json())
+                    .then(data => {
+                        const count = data.notifications ? data.notifications.length : 0;
+                        const badge = document.getElementById("notification-count");
+
+                        if (count > 0) {
+                            badge.innerText = count;
+                            badge.style.display = "inline-block";
+                        } else {
+                            badge.style.display = "none";
+                        }
+                    })
+                    .catch(error => console.error("Error fetching notifications:", error));
+            }
+
+            // Fetch notifications every 10 seconds
+            setInterval(fetchNotifications, 10000);
+            fetchNotifications();
+
+            // Click event for opening notifications
+            document.getElementById("notification-container").addEventListener("click", function() {
+                alert("Show notifications dropdown or redirect to notifications page");
             });
         });
     </script>
