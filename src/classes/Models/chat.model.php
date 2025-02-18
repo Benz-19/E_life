@@ -100,12 +100,10 @@ class ChatModel extends Database
     {
         try {
             $sql = "DELETE FROM conversation WHERE conversation_id = :conversation_id";
-            $stmt = $this->Connection()->query($sql);
+            $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([':conversation_id' => $conversation_id]);
-            return true;
         } catch (PDOException $error) {
             echo "Error fetching messages: " . $error->getMessage();
-            return false;
         }
     }
 }

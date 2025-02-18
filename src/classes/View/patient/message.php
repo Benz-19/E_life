@@ -21,20 +21,16 @@ if (!$_SESSION["patient-login"]) {
 
     $conversation_id = $chat->getConversationId($patientID, $communicatingDoctorID);
     var_dump($conversation_id);
-
+    $_SESSION["converastion_id"] = $conversation_id;
 
     if (isset($_POST["terminateComm"])) {
         echo $_GET["user_id"];
 
-        if ($conversation_id !== null) {
-            $LoggedInUser->updateLoggedInUserState("available", $patientID);
-            // $deleteLoggedInUser->removeLoggedInUser($deleteLoggedInUser->getUserID($_SESSION["patientEmail"]));
-            $chat->deleteSavedConversation($conversation_id); // deletes all the conversations btw the doctor and patient when they exit the app
-            header("Location: dashboard.php");
-            exit();
-        } else {
-            header("Location: test.php");
-        }
+        $LoggedInUser->updateLoggedInUserState("available", $patientID);
+        // $deleteLoggedInUser->removeLoggedInUser($deleteLoggedInUser->getUserID($_SESSION["patientEmail"]));
+        $chat->deleteSavedConversation($_SESSION["converastion_id"]); // deletes all the conversations btw the doctor and patient when they exit the app
+        header("Location: dashboard.php");
+        exit();
     }
 
     // Preventing return to the previous page.
