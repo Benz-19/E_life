@@ -5,11 +5,9 @@ include_once __DIR__ . "/../../../../vendor/autoload.php";
 
 $user = new User; //Patient
 $patientEmail =  $_SESSION["patientEmail"];
-$patient_id = $user->getUserID($patientEmail);
-echo "ID = {$patient_id}";
-
-$_SESSION["conversation_id"] = NULL; //set the conversation ID to be NULL initially
-var_dump($_SESSION["conversation_id"]);
+$user_id = $user->getUserID($patientEmail);
+$_SESSION["user_id"] = $user_id;
+echo "ID = {$_SESSION["user_id"]}";
 
 ?>
 
@@ -22,10 +20,56 @@ var_dump($_SESSION["conversation_id"]);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../../../public/css/patient.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <title>Document</title>
     <style>
         html {
             scroll-behavior: smooth;
+        }
+
+        #notification-container {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 0 12px;
+            color: white;
+        }
+
+        #notification-container::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s ease-in-out;
+            opacity: 0;
+            white-space: nowrap;
+        }
+
+        #notification-container:hover::after {
+            content: "notifications";
+            font-size: 12px;
+            opacity: 1;
+        }
+
+        #notification-bell {
+            color: #333;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -10px;
+            background: red;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 3px 7px;
+            border-radius: 50%;
+            display: none;
+            /* Initially hidden */
         }
     </style>
 </head>
@@ -48,6 +92,12 @@ var_dump($_SESSION["conversation_id"]);
                             <a href="#logout" class="block px-4 py-2 text-gray-800 hover:bg-gray-200 mx-card">Logout</a>
                         </div>
                     </div>
+                </div>
+
+                <!-- Notification -->
+                <div id="notification-container">
+                    <i class="fa fa-bell" id="notification-bell"></i>
+                    <span id="notification-count" class="badge">0</span>
                 </div>
             </div>
         </header>
@@ -130,6 +180,37 @@ var_dump($_SESSION["conversation_id"]);
             featuresSection.scrollIntoView({
                 behavior: 'smooth', // Smooth scroll
                 block: 'start' // Scroll to the top of the section
+            });
+        });
+
+        // Notification handling
+        document.addEventListener("DOMContentLoaded", function() {
+            function fetchNotifications() {
+                let recipientId = <?php echo $_SESSION["user_id"]; ?>;
+
+                fetch(`http://localhost/E_LIFE/src/api/notificationsAPI.php?recipient_id=${recipientId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const count = data.notifications ? data.notifications.length : 0;
+                        const badge = document.getElementById("notification-count");
+
+                        if (count > 0) {
+                            badge.innerText = count;
+                            badge.style.display = "inline-block";
+                        } else {
+                            badge.style.display = "none";
+                        }
+                    })
+                    .catch(error => console.error("Error fetching notifications:", error));
+            }
+
+            // Fetch notifications every 10 seconds
+            setInterval(fetchNotifications, 10000);
+            fetchNotifications();
+
+            // Click event for opening notifications
+            document.getElementById("notification-container").addEventListener("click", function() {
+                alert("Show notifications dropdown or redirect to notifications page");
             });
         });
     </script>

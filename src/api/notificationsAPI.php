@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: GET, POST, PUT");
@@ -13,6 +13,8 @@ $database = new Database();
 $db = $database->Connection();
 $notification = new Notification();
 
+$_GET["recipient_id"] = $_SESSION['user_id'];
+
 // Get the request method
 $method = $_SERVER["REQUEST_METHOD"];
 
@@ -21,17 +23,18 @@ switch ($method) {
     case "POST":
         // Add a new notification
         $data = json_decode(file_get_contents("php://input"), true);
-        if (!isset($data['user_id'], $data['message'], $data['notification_type'])) {
+        if (!isset($data['sender_id'], $data['recipient_id'], $data['message'], $data['notification_type'])) {
             echo json_encode(["error" => "Missing required fields"]);
             http_response_code(400);
             exit;
         }
 
-        $userId = $data['user_id'];
+        $senderId = $data['sender_id'];
+        $recipientId = $data['recipient_id'];
         $message = $data['message'];
         $notificationType = $data['notification_type'];
 
-        if ($notification->addNotification($userId, $message, $notificationType)) {
+        if ($notification->addNotification($senderId, $recipientId, $message, $notificationType)) {
             echo json_encode(["message" => "Notification added successfully"]);
             http_response_code(201);
         } else {
@@ -41,15 +44,15 @@ switch ($method) {
         break;
 
     case "GET":
-        // Fetch unread notifications
-        if (!isset($_GET["user_id"])) {
-            echo json_encode(["error" => "User ID is required"]);
+        // Fetch unread notifications for a recipient
+        if (!isset($_GET["recipient_id"])) {
+            echo json_encode(["error" => "Recipient ID is required"]);
             http_response_code(400);
             exit;
         }
 
-        $userId = $_GET["user_id"];
-        $unreadNotifications = $notification->getUnreadNotifications($userId);
+        $recipientId = $_GET["recipient_id"];
+        $unreadNotifications = $notification->getUnreadNotifications($recipientId);
 
         if ($unreadNotifications) {
             echo json_encode(["notifications" => $unreadNotifications]);
@@ -85,4 +88,25 @@ switch ($method) {
         echo json_encode(["error" => "Method not allowed"]);
         http_response_code(405);
         break;
+}
+
+
+/**
+ * Send notification via WebSocket
+ */
+function sendWebSocketNotification($userId, $message)
+{
+    $wsData = [
+        "type" => "notification",
+        "recipient_id" => $userId,
+        "message" => $message
+    ];
+
+    $wsServer = "ws://localhost:8080"; // WebSocket server URL
+    $wsConnection = @stream_socket_client($wsServer, $errno, $errstr, 30);
+
+    if ($wsConnection) {
+        fwrite($wsConnection, json_encode($wsData));
+        fclose($wsConnection);
+    }
 }

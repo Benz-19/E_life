@@ -5,37 +5,40 @@ include_once __DIR__ . "/../../../vendor/autoload.php";
 class Notification extends Database
 {
 
-    public function addNotification($userId, $message, $notificationType)
+    public function addNotification($senderId, $recipientId, $message, $type)
     {
         try {
-            $sql = "INSERT INTO notifications (user_id, message, notification_type) 
-                    VALUES (:user_id, :message, :notification_type)";
+            $sql = "INSERT INTO notifications (sender_id, recipient_id, message, notification_type) 
+                VALUES (:sender_id, :recipient_id, :message, :type)";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
-                ':user_id' => $userId,
+                ':sender_id' => $senderId,
+                ':recipient_id' => $recipientId,
                 ':message' => $message,
-                ':notification_type' => $notificationType
+                ':type' => $type
             ]);
 
             return true;
         } catch (PDOException $error) {
-            echo "Error: Unable to insert notification - " . $error->getMessage();
+            echo json_encode(["error" => "Unable to populate the database", "details" => $error->getMessage()]);
             return false;
         }
     }
 
-    public function getUnreadNotifications($userId)
+
+    public function getUnreadNotifications($recipientId)
     {
         try {
-            $sql = "SELECT * FROM notifications WHERE user_id = :user_id AND is_read = 0 ORDER BY created_at DESC";
+            $sql = "SELECT * FROM notifications WHERE recipient_id=:recipient_id AND is_read=FALSE";
             $stmt = $this->Connection()->prepare($sql);
-            $stmt->execute([':user_id' => $userId]);
+            $stmt->execute([':recipient_id' => $recipientId]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $err) {
-            echo "Error: Failed to retrieve unread notifications for user ID {$userId} - " . $err->getMessage();
+            echo json_encode(["error" => "Failed to retrieve unread notifications", "details" => $err->getMessage()]);
             return false;
         }
     }
+
 
     public function getNotificationIds($userId)
     {
@@ -43,12 +46,27 @@ class Notification extends Database
             $sql = "SELECT notification_id FROM notifications WHERE user_id = :user_id";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([':user_id' => $userId]);
-            return $stmt->fetchAll(PDO::FETCH_COLUMN); // Fetch only IDs as an array
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch only IDs as an array
         } catch (PDOException $err) {
             echo "Error: Failed to retrieve notification IDs for user ID {$userId} - " . $err->getMessage();
             return false;
         }
     }
+
+    public function getRecipientId($userId)
+    {
+        try {
+            $sql = "SELECT recipient_id FROM notifications WHERE user_id = :user_id";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([':user_id' => $userId]);
+            return $stmt->fetchAll(PDO::FETCH_COLUMN); // Fetch only IDs as an array
+        } catch (PDOException $err) {
+            echo "Error: Failed to retrieve recipient_id for user ID {$userId} - " . $err->getMessage();
+            return false;
+        }
+    }
+
+
 
     public function markAsRead($notificationId)
     {

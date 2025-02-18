@@ -10,6 +10,7 @@ class Chat extends ChatModel implements MessageComponentInterface
 {
     protected $clients = [];
     protected $userConnections = []; // Stores user ID -> connection mapping
+    protected $userStatuses = []; // Track user online/busy statuses
 
     public function onOpen(ConnectionInterface $conn)
     {
@@ -25,78 +26,67 @@ class Chat extends ChatModel implements MessageComponentInterface
             return;
         }
 
-        if ($data['type'] === 'message') {
-            $senderId = $data['sender_id'];
-            $recipientId = $data['recipient_id'];
-
-            foreach ($this->clients as $client) {
-                // Broadcast only to the sender and recipient
-                if ($client->userId === $recipientId || $client->userId === $senderId) {
-                    $client->send(json_encode($data));
-                }
-            }
-        }
-
-
         switch ($data['type']) {
             case 'connect':
-                // Store the connection under the user's ID
                 $userId = $data['user_id'];
                 $this->userConnections[$userId] = $from;
+                $this->userStatuses[$userId] = 'online';
+                $this->broadcastStatusUpdate($userId, 'online');
+                break;
+
+            case 'disconnect':
+                $userId = $data['user_id'];
+                unset($this->userConnections[$userId]);
+                $this->userStatuses[$userId] = 'offline';
+                $this->broadcastStatusUpdate($userId, 'offline');
                 break;
 
             case 'typing':
-                // Notify the recipient that the sender is typing
-                $recipientId = $data['recipient_id'] ?? null;
-
-                if (isset($this->userConnections[$recipientId])) {
-                    $this->userConnections[$recipientId]->send(json_encode([
-                        'type' => 'typing',
-                        'sender_id' => $data['sender_id']
-                    ]));
-                }
-                break;
-
             case 'stop_typing':
-                // Notify the recipient that the sender stopped typing
                 $recipientId = $data['recipient_id'] ?? null;
-
                 if (isset($this->userConnections[$recipientId])) {
                     $this->userConnections[$recipientId]->send(json_encode([
-                        'type' => 'stop_typing',
+                        'type' => $data['type'],
                         'sender_id' => $data['sender_id']
                     ]));
                 }
                 break;
-            case 'message':
-                if (empty($data['sender_id']) || empty($data['recipient_id']) || empty($data['message'])) {
-                    echo "Invalid message data received.\n";
-                    return;
-                }
-                $recipientId = $data['recipient_id'] ?? null;
 
-                $senderId = $data['sender_id'] ?? null;
+            case 'message':
+                $senderId = $data['sender_id'];
+                $recipientId = $data['recipient_id'];
                 $message = $data['message'];
 
-                try {
-                    // Save the message in the database
-                    $conversationId = $this->getConversationId($senderId, $recipientId);
+                if ($this->isDoctorBusy($recipientId)) {
+                    if (isset($this->userConnections[$senderId])) {
+                        $this->userConnections[$senderId]->send(json_encode([
+                            'type' => 'busy',
+                            'message' => 'Doctor is currently busy. Please wait.'
+                        ]));
+                    }
+                    return;
+                }
 
-                    if ($conversationId) {
-                        // $this->updateConversation($conversationId, $senderId, $message);
-                        $this->setConversation($conversationId, $senderId, $recipientId, $message);
-                    } else {
-                        $conversationId = uniqid(); // Generate a unique conversation ID
+                try {
+                    $conversationId = $this->getConversationId($senderId, $recipientId);
+                    if (!$conversationId) {
+                        $conversationId = uniqid();
                         $this->startConversation($conversationId, $senderId, $recipientId, $message);
+                    } else {
+                        $this->setConversation($conversationId, $senderId, $recipientId, $message);
                     }
 
-                    // Forward the message to the recipient
                     if (isset($this->userConnections[$recipientId])) {
                         $this->userConnections[$recipientId]->send(json_encode([
                             'type' => 'message',
                             'message' => $message,
                             'sender_id' => $senderId
                         ]));
+                    }
+
+                    if ($this->isDoctor($recipientId)) {
+                        $this->userStatuses[$recipientId] = 'busy';
+                        $this->broadcastStatusUpdate($recipientId, 'busy');
                     }
                 } catch (Exception $e) {
                     echo "Error saving or forwarding message: " . $e->getMessage();
@@ -105,13 +95,13 @@ class Chat extends ChatModel implements MessageComponentInterface
         }
     }
 
-
-
     public function onClose(ConnectionInterface $conn)
     {
         foreach ($this->userConnections as $userId => $connection) {
             if ($connection === $conn) {
                 unset($this->userConnections[$userId]);
+                $this->userStatuses[$userId] = 'offline';
+                $this->broadcastStatusUpdate($userId, 'offline');
                 break;
             }
         }
@@ -121,5 +111,27 @@ class Chat extends ChatModel implements MessageComponentInterface
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
         $conn->close();
+    }
+
+    protected function broadcastStatusUpdate($userId, $status)
+    {
+        foreach ($this->clients as $client) {
+            $client->send(json_encode([
+                'type' => 'status_update',
+                'user_id' => $userId,
+                'status' => $status
+            ]));
+        }
+    }
+
+    protected function isDoctor($userId)
+    {
+        // Placeholder: Implement logic to check if user is a doctor
+        return true;
+    }
+
+    protected function isDoctorBusy($doctorId)
+    {
+        return isset($this->userStatuses[$doctorId]) && $this->userStatuses[$doctorId] === 'busy';
     }
 }

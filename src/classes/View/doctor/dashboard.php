@@ -5,8 +5,10 @@ include_once __DIR__ . "/../../../../vendor/autoload.php";
 
 $user = new User; //Doctor
 $doctorEmail =  $_SESSION["doctorEmail"];
-$doctor_id = $user->getUserID($doctorEmail);
-echo "ID = {$doctor_id}";
+$user_id = $user->getUserID($doctorEmail);
+
+$_SESSION["user_id"] = $user_id;
+echo "ID = {$_SESSION["user_id"]}";
 ?>
 
 
@@ -184,9 +186,12 @@ echo "ID = {$doctor_id}";
             });
         });
 
+        // Notification handling
         document.addEventListener("DOMContentLoaded", function() {
             function fetchNotifications() {
-                fetch("http://your-api-endpoint/notifications/unread?user_id=1")
+                let recipientId = <?php echo $_SESSION["user_id"]; ?>;
+
+                fetch(`http://localhost/E_LIFE/src/api/notificationsAPI.php?recipient_id=${recipientId}`)
                     .then(response => response.json())
                     .then(data => {
                         const count = data.notifications ? data.notifications.length : 0;
