@@ -33,7 +33,7 @@ echo "ID = {$_SESSION["user_id"]}";
             cursor: pointer;
             font-size: 24px;
             padding: 0 12px;
-            color: white;
+            color: black;
         }
 
         #notification-container::after {
@@ -116,7 +116,7 @@ echo "ID = {$_SESSION["user_id"]}";
                 <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform my-card">
                     <div class="flex justify-between bg-white p-6 rounded-lg shadow-lg transition-transform transform">
                         <h3 class="text-xl font-semibold">Secure Chat</h3>
-                        <img src="../../../../public/images/send_message.png" alt="Health Logo" class="h-10 mr-3">
+                        <img src="../../../../public/images/send_message.png" alt="Send Logo" class="h-10 mr-3">
                     </div>
                     <p class="mt-2 text-gray-600">Chat securely with your doctor anytime, anywhere.</p>
                     <a href="available.doc.php">
@@ -126,7 +126,7 @@ echo "ID = {$_SESSION["user_id"]}";
                 <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform my-card">
                     <div class="flex justify-between bg-white p-6 rounded-lg shadow-lg transition-transform transform">
                         <h3 class="text-xl font-semibold">Appointment Scheduling</h3>
-                        <img src="../../../../public/images/appointment.png" alt="Health Logo" class="h-10 mr-3">
+                        <img src="../../../../public/images/appointment.png" alt="Schedule Logo" class="h-10 mr-3">
                     </div>
                     <p class="mt-2 text-gray-600">Easily schedule appointments that fit your schedule.</p>
                     <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-300 mx-card">Learn More</button>
@@ -134,7 +134,7 @@ echo "ID = {$_SESSION["user_id"]}";
                 <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform my-card">
                     <div class="flex justify-between bg-white p-6 rounded-lg shadow-lg transition-transform transform">
                         <h3 class="text-xl font-semibold">Prescription Management</h3>
-                        <img src="../../../../public/images/prescription.png" alt="Health Logo" class="h-10 mr-3">
+                        <img src="../../../../public/images/prescription.png" alt="Presciption Logo" class="h-10 mr-3">
                     </div>
                     <p class="mt-2 text-gray-600">View and manage your prescriptions conveniently.</p>
                     <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-300 mx-card">Learn More</button>
