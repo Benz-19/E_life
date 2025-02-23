@@ -6,7 +6,6 @@ include_once __DIR__ . "/../auth/login.auth.php";
 
 $user_type = "patient"; //Default assuming the user signs in directly from the general index page
 $_SESSION["user_type"] = $user_type;
-echo "session: " . $_SESSION["user_type"];
 
 // Check if the user is already logged in
 if (isset($_SESSION['user_ihd'])) {
