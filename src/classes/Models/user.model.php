@@ -278,6 +278,32 @@ class User extends Database
             handle_error("Failed to get user type: " . $error->getMessage());
         }
     }
+
+    // GET the user Details
+    public function getUserDetails($user_id)
+    {
+        try {
+            $sql = "SELECT * FROM users WHERE user_id=:user_id";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([':user_id' => $user_id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $error) {
+            handle_error("Failed to get user details: " . $error->getMessage());
+        }
+    }
+
+    // Get All Users
+    public function getAllUsers()
+    {
+        try {
+            $sql = "SELECT * FROM users";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $error) {
+            handle_error("Failed to get all users: " . $error->getMessage());
+        }
+    }
 }
 
 
