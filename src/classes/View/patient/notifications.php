@@ -11,14 +11,13 @@ require_once __DIR__ . "/../../Models/notification.model.php";
 // }
 
 $userNotification = new Notification();
-$notifications = $userNotification->getUnreadNotifications(27);
+$notifications = $userNotification->getUnreadNotifications(0);
 
 $users = new User();
 $users = $users->getAllUsers();
+$index = 0;
 
-echo "<pre>";
-print_r($users);
-echo "</pre>";
+
 ?>
 
 
@@ -31,6 +30,16 @@ echo "</pre>";
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #notification-cont {
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #notification-cont:hover {
+            background-color: #f7f7f7;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 h-screen flex flex-col">
@@ -41,29 +50,29 @@ echo "</pre>";
         </div>
         <div class="overflow-y-auto" id="notification-cont">
             <?php if ($notifications): ?>
-                <?php foreach ($users as $user): ?>
+                <?php while ($index != count($users)): ?>
                     <?php foreach ($notifications as $notification): ?>
-                        <div class="p-4 border-b flex items-center">
-                            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div class="ml-2">
-                                <?php if (array_search($notification['user_id'], $user)): ?>
-                                    <p class="font-semibold"><?php echo htmlspecialchars($user['name']); ?></p>
+                        <?php if ($notification['user_id'] === $users[$index]['user_id']): ?>
+                            <div class="p-4 border-b flex items-center">
+                                <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="ml-2">
+                                    <p class="font-semibold"><?php echo htmlspecialchars($users[$index]['name']); ?></p>
                                     <p class="text-sm text-gray-600"><?php echo htmlspecialchars($notification['notification_type']); ?></p>
-                                    <?php break; ?>
-                                <?php endif; ?>
+                                </div>
                             </div>
-                        </div>
+                            <?php break; ?>
+                        <?php endif; ?>
                     <?php endforeach; ?>
-                <?php endforeach; ?>
+                    <?php $index++; ?>
+                <?php endwhile; ?>
             <?php else: ?>
                 <div class="p-4 text-center text-gray-500">
                     No notifications available.
                 </div>
             <?php endif; ?>
         </div>
-
 </body>
 
 </html>
