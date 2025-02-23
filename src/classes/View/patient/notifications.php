@@ -5,10 +5,10 @@ if (session_status() == PHP_SESSION_NONE) {
 
 require_once __DIR__ . "/../../../../vendor/autoload.php";
 require_once __DIR__ . "/../../Models/notification.model.php";
-// if (!isset($_SESSION['patient-login'])) {
-//     header('Location: index.php');
-//     exit();
-// }
+if (!isset($_SESSION['patient-login'])) {
+    header('Location: index.php');
+    exit();
+}
 
 $userNotification = new Notification();
 $notifications = $userNotification->getUnreadNotifications(0);
