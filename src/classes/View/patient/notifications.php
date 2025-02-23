@@ -17,7 +17,6 @@ $users = new User();
 $users = $users->getAllUsers();
 $index = 0;
 
-
 ?>
 
 
