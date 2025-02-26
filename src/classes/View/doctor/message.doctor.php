@@ -159,7 +159,7 @@ echo '<script type="text/javascript">
 
     <script>
         // =============================
-        // 🟢 WebSocket Chat Handling
+        //  WebSocket Chat Handling
         // =============================
 
         const conn = new WebSocket('ws://localhost:8080');
@@ -206,9 +206,17 @@ echo '<script type="text/javascript">
 
             if (data.type === 'typing') {
                 typingMessage.classList.remove("hidden");
+
+                // Reset previous timeout and start a new one
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => {
+                    typingMessage.classList.add("hidden");
+                }, 1000);
+
             } else if (data.type === 'stop_typing') {
                 typingMessage.classList.add("hidden");
             } else if (data.type === 'message') {
+                typingMessage.classList.add("hidden");
                 displayMessage(data.message, data.sender_id === userId ? "right" : "left");
             }
         };
@@ -263,7 +271,7 @@ echo '<script type="text/javascript">
                     user_id: userId,
                     recipient_id: recipientId
                 }));
-            }, 1000);
+            }, 600);
         });
 
         // Send a Message when the Send Button is Clicked
@@ -315,7 +323,7 @@ echo '<script type="text/javascript">
         terminateConversation.style.display = "none";
 
         // =============================
-        // 🟢 AJAX Requests to chatAPI.php
+        //  AJAX Requests to chatAPI.php
         // =============================
 
         // Fetch Old Messages from chatAPI.php

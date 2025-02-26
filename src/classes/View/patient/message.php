@@ -201,9 +201,17 @@ window.onunload = function(){null;}
 
             if (data.type === 'typing') {
                 typingMessage.classList.remove("hidden");
+
+                // Reset previous timeout and start a new one
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => {
+                    typingMessage.classList.add("hidden");
+                }, 1000);
+
             } else if (data.type === 'stop_typing') {
                 typingMessage.classList.add("hidden");
             } else if (data.type === 'message') {
+                typingMessage.classList.add("hidden");
                 displayMessage(data.message, data.sender_id === userId ? "right" : "left");
             }
         };
