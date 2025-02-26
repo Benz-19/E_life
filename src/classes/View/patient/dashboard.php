@@ -129,7 +129,9 @@ echo "ID = {$_SESSION["user_id"]}";
                         <img src="../../../../public/images/appointment.png" alt="Schedule Logo" class="h-10 mr-3">
                     </div>
                     <p class="mt-2 text-gray-600">Easily schedule appointments that fit your schedule.</p>
-                    <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-300 mx-card">Learn More</button>
+                    <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-300 mx-card">
+                        <a href="<?php echo 'schedule.php'; ?>">Learn More</a>
+                    </button>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform my-card">
                     <div class="flex justify-between bg-white p-6 rounded-lg shadow-lg transition-transform transform">

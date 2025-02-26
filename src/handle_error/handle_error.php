@@ -38,8 +38,12 @@ function redirect_message($msg)
 
         color: green;
         font-size: medium;
+        font-weight: bold;
         text-align: center;
         font-style: italic;
+        box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.21);
+        background-color: rgba(218, 243, 239, 0.52);
+        text-align: center;
     }
 </style>
 

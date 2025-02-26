@@ -266,6 +266,8 @@ class User extends Database
         }
     }
 
+
+
     // GET the user TYPE
     public function getUserTypeFromDB($email)
     {

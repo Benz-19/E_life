@@ -7,7 +7,7 @@ if (!$_SESSION["doctor-login"]) {
     require_once __DIR__ . "/../../../../vendor/autoload.php";
     require_once __DIR__ . "/../../Models/userState.model.php";
 
-    $user = new User;
+    $user = new Doctor;
     $LoggedInUser = new loggedInUser;
     $chat = new ChatModel;
 
@@ -22,14 +22,14 @@ if (!$_SESSION["doctor-login"]) {
     $conversation_id = $chat->getConversationId($doctorID, $communicatingPatientID);
     var_dump($conversation_id);
 
-    $_SESSION["converastion_id"] = $conversation_id;
+    $_SESSION["conversation_id"] = $conversation_id;
 
     if (isset($_POST["terminateComm"])) {
         echo $_GET["user_id"];
 
         $LoggedInUser->updateLoggedInUserState("available", $doctorID); //updates the doctor's state to available
         // $LoggedInUser->removeLoggedInUser($user->getUserID($_SESSION["doctorEmail"])); //remove the doctor's chat
-        $chat->deleteSavedConversation($_SESSION["converastion_id"]); // deletes all the conversations btw the doctor and patient when they exit the app
+        $chat->deleteSavedConversation($_SESSION["conversation_id"]); // deletes all the conversations btw the doctor and patient when they exit the app
         header("Location: dashboard.php");
         exit();
     }
