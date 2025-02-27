@@ -3,11 +3,11 @@ session_start();
 
 include_once __DIR__ . "/../../../../vendor/autoload.php";
 
-$user = new Doctor; //Doctor
+$user = new User; //Doctor
 $doctorEmail =  $_SESSION["doctorEmail"];
 $user_id = $user->getUserID($doctorEmail);
-
 $_SESSION["user_id"] = $user_id;
+$userName = $user->getUserDetails($user_id)["name"];
 echo "ID = {$_SESSION["user_id"]}";
 ?>
 
@@ -105,7 +105,7 @@ echo "ID = {$_SESSION["user_id"]}";
             </div>
         </header>
         <section class="flex flex-col items-center justify-center flex-1 text-center pt-80 pb-48">
-            <h1 class="text-5xl font-bold text-white">Welcome Doctor X</h1>
+            <h1 class="text-5xl font-bold text-white">Welcome Doctor <?php echo $userName; ?></h1>
             <p class="mt-4 text-lg text-white">Chat, Schedule, and Manage Your Health Effortlessly.</p>
 
             <div class="relative w-full mt-6">

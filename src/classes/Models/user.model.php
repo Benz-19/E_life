@@ -306,6 +306,18 @@ class User extends Database
             handle_error("Failed to get all users: " . $error->getMessage());
         }
     }
+
+    public function getUserEstablishedSchedule($patient_id)
+    {
+        try {
+            $sql = "SELECT * FROM appointment WHERE patient_id = :patient_id";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([':patient_id' => $patient_id]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $error) {
+            handle_error("Failed to get all users: " . $error->getMessage());
+        }
+    }
 }
 
 

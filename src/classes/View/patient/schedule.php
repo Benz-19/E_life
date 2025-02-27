@@ -1,45 +1,89 @@
+<?php
+require_once __DIR__ . '/../../../../vendor/autoload.php';
+$user = new Doctor();
+$doctors = $user->getAllUsers();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule Appointments</title>
+    <title>Doctor Schedule</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/YOUR_FONTAWESOME_KIT.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="bg-gray-100 p-6">
+
+    <div class="p-4 bg-gray-200 rounded-lg flex justify-start mx-4">
+        <button type="submit" name="schedule" class="bg-red-500 text-white px-4 py-2 rounded-lg">
+            <a href="dashboard.php">Return To dashboard</a>
+        </button>
+    </div>
+
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Schedule Appointments</h2>
+        <div class="flex justify-between mb-4">
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+                <a href="receivedSchedules.php">View Received Schedules</a>
+            </button>
+            <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
+                <a href="sentSchedules.php">View Sent Schedules</a>
+            </button>
+        </div>
 
-        <!-- Appointment Form -->
-        <form id="scheduleForm" class="mb-6">
-            <div class="mb-4">
-                <label class="block text-gray-700 font-medium" for="date">Select Date</label>
-                <input type="date" id="date" name="date" class="w-full p-2 border rounded-lg">
-            </div>
+        <h2 class="text-xl font-semibold text-center mb-4">Establish a Schedule</h2>
 
-            <div class="mb-4">
-                <label class="block text-gray-700 font-medium" for="time">Select Time</label>
-                <input type="time" id="time" name="time" class="w-full p-2 border rounded-lg">
-            </div>
+        <div class="mb-4 relative">
+            <input type="text" id="searchPatient" class="w-full px-4 py-2 border rounded-lg" placeholder="Search doctors by email...">
+            <button class="absolute right-3 top-2 text-gray-600">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
 
-            <div class="mb-4">
-                <label class="block text-gray-700 font-medium" for="details">Appointment Details</label>
-                <textarea id="details" name="details" class="w-full p-2 border rounded-lg" rows="3"></textarea>
-            </div>
-
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Schedule</button>
-        </form>
-
-        <!-- Scheduled Appointments -->
         <div>
-            <h3 class="text-xl font-semibold text-gray-800 mb-3">Upcoming Appointments</h3>
-            <ul id="appointmentList" class="space-y-3">
-                <li class="p-4 bg-gray-200 rounded-lg">No appointments scheduled yet.</li>
-            </ul>
+            <h3 class="text-lg font-semibold mb-2">Doctors List</h3>
+            <table class="w-full bg-white border rounded-lg shadow">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="p-2">ID</th>
+                        <th class="p-2">Name</th>
+                        <th class="p-2">Email</th>
+                        <th class="p-2">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="patientList">
+                    <?php foreach ($doctors as $doctor): ?>
+                        <?php if ($doctor['user_type'] === 'doctor'): ?>
+                            <tr class="border-t">
+                                <td class="p-2"> <?= htmlspecialchars($doctor['user_id']) ?> </td>
+                                <td class="p-2"> <?= htmlspecialchars($doctor['name']) ?> </td>
+                                <td class="p-2"> <?= htmlspecialchars($doctor['email']) ?> </td>
+                                <td>
+                                    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+                                        <a href="establishSchedule.php?id=<?php echo $doctor['user_id']; ?>">Schedule</a>
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#searchPatient').on('keyup', function() {
+                let value = $(this).val().toLowerCase();
+                $('#patientList tr').filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

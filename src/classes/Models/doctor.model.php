@@ -27,11 +27,11 @@ class Doctor extends User
         }
     }
 
-    public function getReceivedSchedules($patientId)
+    public function getReceivedSchedules($userId)
     {
-        $sql = "SELECT * FROM appointment WHERE patient_id = ?";
+        $sql = "SELECT * FROM appointment WHERE doctor_id = ?";
         $stmt = $this->Connection()->prepare($sql);
-        $stmt->execute([$this->getUserId($patientId)]);
+        $stmt->execute([$this->getUserId($userId)]);
         return $stmt->fetchAll();
     }
 

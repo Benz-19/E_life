@@ -17,10 +17,21 @@ $patients = $user->getAllUsers();
 </head>
 
 <body class="bg-gray-100 p-6">
+
+    <div class="p-4 bg-gray-200 rounded-lg flex justify-start mx-4">
+        <button type="submit" name="schedule" class="bg-red-500 text-white px-4 py-2 rounded-lg">
+            <a href="dashboard.php">Return To dashboard</a>
+        </button>
+    </div>
+
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
         <div class="flex justify-between mb-4">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">View Received Schedules</button>
-            <button class="bg-green-500 text-white px-4 py-2 rounded-lg">View Sent Schedules</button>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+                <a href="receivedSchedules.php">View Received Schedules</a>
+            </button>
+            <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
+                <a href="sentSchedules.php">View Sent Schedules</a>
+            </button>
         </div>
 
         <h2 class="text-xl font-semibold text-center mb-4">Establish a Schedule</h2>
