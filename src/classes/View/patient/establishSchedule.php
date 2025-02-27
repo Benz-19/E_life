@@ -13,14 +13,13 @@ if (isset($_POST['schedule'])) {
     $date = $_POST['date'];
     $time = $_POST['time'];
     $details = $_POST['details'];
-
     if (empty($date) || empty($time) || empty($details)) {
         echo "<script>alert('Please fill all fields')</script>";
     } else {
         $doctor = new Doctor();
         $patient = new User();
-        $sender = $doctor->getUserDetails($patient_id)['email'];
-        $receiver = $patient->getUserDetails($doctor_id)['email'];
+        $sender = $patient->getUserDetails($patient_id)['email'];
+        $receiver = $doctor->getUserDetails($doctor_id)['email'];
         $doctor_name =  $doctor->getUserDetails($doctor_id)['name'];
         $doctor->establishSchedule($patient_id, $doctor_id, $date, $time, $details, $sender, $receiver);
         success_message('Schedule established successfully');
