@@ -406,6 +406,7 @@ class ComposerStaticInit2185d2f99bcd56787481d9357a5972d3
         'Notification' => __DIR__ . '/../..' . '/src/classes/Models/notification.model.php',
         'Override' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/Override.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+        'Prescription' => __DIR__ . '/../..' . '/src/classes/Models/prescription.model.php',
         'SQLite3Exception' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/SQLite3Exception.php',
         'SendGrid' => __DIR__ . '/..' . '/sendgrid/sendgrid/lib/SendGrid.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',

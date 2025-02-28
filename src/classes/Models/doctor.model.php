@@ -27,6 +27,17 @@ class Doctor extends User
         }
     }
 
+
+    public function getUserId($id)
+    {
+        $sql = "SELECT user_id FROM users WHERE user_id = :id";
+        $stmt = $this->Connection()->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $user ? $user['user_id'] : null; // Return ID if found, otherwise null
+    }
+
+
     public function getReceivedSchedules($userId)
     {
         $sql = "SELECT * FROM appointment WHERE doctor_id = ?";
