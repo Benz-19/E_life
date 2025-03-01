@@ -7,7 +7,7 @@ if (!$_SESSION["doctor-login"]) {
     require_once __DIR__ . "/../../../../vendor/autoload.php";
     require_once __DIR__ . "/../../Models/userState.model.php";
 
-    $user = new Doctor;
+    $user = new User;
     $LoggedInUser = new loggedInUser;
     $chat = new ChatModel;
 

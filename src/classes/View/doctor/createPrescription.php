@@ -58,6 +58,18 @@ if (isset($_POST['previewBtn'])) {
 
 <body class="bg-gray-100 p-6">
 
+    <!-- Return to Appointments Page -->
+    <div>
+        <div id="appointmentList" class="space-y-3">
+            <div class="p-4 bg-gray-200 rounded-lg">
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Return to Appointments</h3>
+                <button type="submit" name="schedule" class="bg-red-500 text-white px-4 py-2 rounded-lg">
+                    <a href="prescription.php">return</a>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
         <h2 class="text-xl font-semibold text-center mb-4">Create Prescription for <span class="text-red-500"><?= htmlspecialchars(strtoupper($patient_info['name'])) ?></span></h2>
 
