@@ -31,6 +31,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 }
+
+if (isset($_POST['previewBtn'])) {
+    if (generatePrescription($patient_info['name'], $description, $reason, $hypothesis, date($date))) {
+        include_once __DIR__ . '/../../../includes/genratePrescription.php';
+        echo '
+        <img src="../../../includes/genratePrescription.php" alt="Prescription">
+        ';
+    } else {
+        echo "unable to generate prescription!!!";
+    }
+} else {
+    echo "Failed to generate preview";
+}
 ?>
 
 <!DOCTYPE html>
@@ -73,21 +86,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </button>
         </form>
 
-        <?php if (isset($success)): ?>
-            <div class="bg-gray-200 p-4 mt-4 rounded-lg shadow">
-                <h3 class="text-lg font-semibold">Prescription Preview</h3>
-                <p><strong>Patient:</strong> <?= htmlspecialchars($patient_info['name']) ?></p>
-                <p><strong>Description:</strong> <?= htmlspecialchars($description) ?></p>
-                <p><strong>Reason:</strong> <?= htmlspecialchars($reason) ?></p>
-                <p><strong>Hypothesis:</strong> <?= htmlspecialchars($hypothesis) ?></p>
+        <form action="" method="post">
+            <?php if (isset($success)): ?>
+                <div class="bg-gray-200 p-4 mt-4 rounded-lg shadow">
+                    <h3 class="text-lg font-semibold">Prescription Preview</h3>
+                    <p><strong>Patient:</strong> <?= htmlspecialchars($patient_info['name']) ?></p>
+                    <p><strong>Description:</strong> <?= htmlspecialchars($description) ?></p>
+                    <p><strong>Reason:</strong> <?= htmlspecialchars($reason) ?></p>
+                    <p><strong>Hypothesis:</strong> <?= htmlspecialchars($hypothesis) ?></p>
 
-                <button class="bg-green-500 text-white px-4 py-2 rounded-lg mt-2">
-                    Send to <?= htmlspecialchars($patient_info['name']) ?>
-                </button>
-            </div>
-        <?php endif; ?>
+                    <button class="bg-green-500 text-white px-4 py-2 rounded-lg mt-2" type="submit" name="previewBtn">Preview Prescription</button>
+
+                    <button class="bg-green-500 text-white px-4 py-2 rounded-lg mt-2">
+                        Send to <?= htmlspecialchars($patient_info['name']) ?>
+                    </button>
+                </div>
+            <?php endif; ?>
+        </form>
     </div>
-
 </body>
 
 </html>

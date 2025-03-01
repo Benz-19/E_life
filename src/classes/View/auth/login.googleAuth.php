@@ -38,13 +38,13 @@ function handleGoogleUser($google_id, $name, $email, $google_verified, $google_v
     $existingUser = $user->getUserByGoogleId($google_id);
 
     if ($existingUser) {
-        $user->updateUserDetailGoogle($existingUser['id'], $name, $email, $google_verified, $google_verification_code);
+        $user->updateUserDetailGoogle($existingUser['user_id'], $name, $email, $google_verified, $google_verification_code);
     } else {
         $user->createUserDetailGoogle($name, $email, $google_verified, $google_verification_code, $google_id, $_SESSION["user_type"]);
         echo "session: " . $_SESSION["user_type"];
     }
 
-    $_SESSION['user_id'] = $existingUser ? $existingUser['id'] : $user->getLastInsertId();
+    $_SESSION['user_id'] = $existingUser ? $existingUser['user_id'] : $user->getLastInsertId();
 
     if ($_SESSION["user_type"] === "patient") {
 
