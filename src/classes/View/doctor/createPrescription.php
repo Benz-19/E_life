@@ -33,11 +33,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 if (isset($_POST['previewBtn'])) {
+    // require_once __DIR__ . '/../../../includes/generatePrescription.php';
     if (generatePrescription($patient_info['name'], $description, $reason, $hypothesis, date($date))) {
-        include_once __DIR__ . '/../../../includes/genratePrescription.php';
-        echo '
-        <img src="../../../includes/genratePrescription.php" alt="Prescription">
-        ';
+        // echo '
+        // <img src="../../../includes/genratePrescription.php" alt="Prescription">
+        // ';
+        echo "yes";
     } else {
         echo "unable to generate prescription!!!";
     }
@@ -96,9 +97,7 @@ if (isset($_POST['previewBtn'])) {
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg">
                 Generate Prescription
             </button>
-        </form>
 
-        <form action="" method="post">
             <?php if (isset($success)): ?>
                 <div class="bg-gray-200 p-4 mt-4 rounded-lg shadow">
                     <h3 class="text-lg font-semibold">Prescription Preview</h3>
@@ -114,6 +113,10 @@ if (isset($_POST['previewBtn'])) {
                     </button>
                 </div>
             <?php endif; ?>
+        </form>
+
+        <form action="" method="post">
+
         </form>
     </div>
 </body>
