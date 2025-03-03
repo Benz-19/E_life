@@ -8,7 +8,6 @@ $patientEmail =  $_SESSION["patientEmail"];
 $user_id = $user->getUserID($patientEmail);
 $_SESSION["user_id"] = $user_id;
 echo "ID = {$_SESSION["user_id"]}";
-
 ?>
 
 
@@ -102,7 +101,8 @@ echo "ID = {$_SESSION["user_id"]}";
             </div>
         </header>
         <section class="flex flex-col items-center justify-center flex-1 text-center pt-80 pb-48">
-            <h1 class="text-5xl font-bold text-white">Connect with Your Doctor</h1>
+            <h1 class="text-5xl font-bold text-white">Welcome <?php echo $username; ?>!</h1>
+            <h5 class="text-3xl font-bold text-white">Connect with Your Doctor</h5>
             <p class="mt-4 text-lg text-white">Chat, Schedule, and Manage Your Health Effortlessly.</p>
 
             <div class="relative w-full mt-6">

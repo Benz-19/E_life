@@ -8,7 +8,6 @@ include_once __DIR__ . '/../../Models/userState.model.php';
 include_once __DIR__ . '/../../../../vendor/autoload.php';
 
 
-// Path: src/classes/View/auth/login.auth.php
 //user sign in without google
 function userSignIn($email, $password, $user_type)
 {

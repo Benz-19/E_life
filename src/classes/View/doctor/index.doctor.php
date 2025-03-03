@@ -1,7 +1,6 @@
 <?php
 session_start();
 require __DIR__ . "/../../../../vendor/autoload.php";
-include_once __DIR__ . "/../../../handle_error/handle_error.php";
 include_once __DIR__ . "/../auth/login.auth.php";
 
 $user_type = "doctor";
