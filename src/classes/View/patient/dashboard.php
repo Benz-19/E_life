@@ -3,11 +3,12 @@ session_start();
 
 include_once __DIR__ . "/../../../../vendor/autoload.php";
 
-$user = new User; //Patient
+$patient = new Patient; //Patient
 $patientEmail =  $_SESSION["patientEmail"];
-$user_id = $user->getUserID($patientEmail);
+$user_id = $patient->getUserID($patientEmail);
 $_SESSION["user_id"] = $user_id;
 echo "ID = {$_SESSION["user_id"]}";
+$username = $patient->getUserDetails($_SESSION["user_id"])['name'];
 ?>
 
 
@@ -70,6 +71,10 @@ echo "ID = {$_SESSION["user_id"]}";
             display: none;
             /* Initially hidden */
         }
+
+        .username {
+            color: brown;
+        }
     </style>
 </head>
 
@@ -101,7 +106,7 @@ echo "ID = {$_SESSION["user_id"]}";
             </div>
         </header>
         <section class="flex flex-col items-center justify-center flex-1 text-center pt-80 pb-48">
-            <h1 class="text-5xl font-bold text-white">Welcome <?php echo $username; ?>!</h1>
+            <h1 class="text-5xl font-bold text-white">Welcome <span class="username"><?php echo $username; ?></span>!</h1>
             <h5 class="text-3xl font-bold text-white">Connect with Your Doctor</h5>
             <p class="mt-4 text-lg text-white">Chat, Schedule, and Manage Your Health Effortlessly.</p>
 

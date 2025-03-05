@@ -6,6 +6,39 @@ require "user.model.php";
 class Doctor extends User
 {
 
+    public function authenticateDoctor($userEmail, $userPassword)
+    {
+        $this->userEmail = $userEmail;
+        $this->userPassword = $userPassword;
+
+
+        try {
+            $sql = "SELECT * FROM doctor WHERE email = :email";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([
+                ':email' => $this->userEmail
+            ]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+
+            if ($user) {
+                $passwordCheck =  $this->userPassword === $user['password'] || password_verify($this->userPassword, $user['password'])  ? true : false;
+                if ($passwordCheck) {
+                    return true;
+                } else {
+                    echo handle_error("Password is incorrect");
+                    return false;
+                }
+            } else {
+                echo handle_error("User not found");
+                return false;
+            }
+        } catch (PDOException $error) {
+            echo handle_error("Failed to authenticate user: ") . $error->getMessage();
+        }
+    }
+
+
     public function establishSchedule($patientId, $doctor_id, $date, $time, $details, $sender, $receiver)
     {
         try {

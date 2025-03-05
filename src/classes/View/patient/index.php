@@ -8,8 +8,8 @@ $user_type = "patient"; //Default assuming the user signs in directly from the g
 $_SESSION["user_type"] = $user_type;
 
 // Check if the user is already logged in
-if (isset($_SESSION['user_ihd'])) {
-    echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
     exit();
 } else {
     // Sign in
@@ -34,8 +34,8 @@ if (isset($_SESSION['user_ihd'])) {
         if (isset($_POST['google-sign-in-btn']) || isset($_POST['google-sign-up-btn'])) {
             include_once __DIR__ . "/../auth/login.googleAuth.php";
 
-            $user = new User;
-            $user->setUserType($user_type);
+            $patient = new Patient;
+            $patient->setUserType($user_type);
             $google_client = getGoogleClient();
             $authUrl = $google_client->createAuthUrl();
             echo '<script type="text/javascript">window.location.href = "' . $authUrl . '";</script>';
