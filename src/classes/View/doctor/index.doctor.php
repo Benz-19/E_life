@@ -207,9 +207,7 @@ if (isset($_SESSION['user_id'])) {
                         <i class="fab fa-facebook-f"></i>
                     </button>
                     <button type="submit" name="google-sign-in-btn" class="social-button">
-                        <a href="">
-                            <i class="fab fa-google-plus-g"></i>
-                        </a>
+                        <i class="fab fa-google-plus-g"></i>
                     </button>
                     <button type="submit" name="linkedin-sign-in-btn" class="social-button">
                         <i class="fab fa-linkedin-in"></i>
