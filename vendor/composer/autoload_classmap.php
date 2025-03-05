@@ -45,6 +45,7 @@ return array(
     'MessageController' => $baseDir . '/src/classes/Models/messages.model.php',
     'Notification' => $baseDir . '/src/classes/Models/notification.model.php',
     'Override' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/Override.php',
+    'Patient' => $baseDir . '/src/classes/Models/patient.model.php',
     'PhpToken' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
     'Prescription' => $baseDir . '/src/classes/Models/prescription.model.php',
     'SQLite3Exception' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/SQLite3Exception.php',

@@ -8,7 +8,7 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 include_once __DIR__ . "/../../vendor/autoload.php";
 include_once __DIR__ . "/../classes/Models/notification.model.php";
 
-// Initialize database and notification model
+// Initialized database and notification model
 $database = new Database();
 $db = $database->Connection();
 $notification = new Notification();
