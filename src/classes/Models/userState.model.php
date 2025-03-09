@@ -5,22 +5,52 @@ include_once "user.model.php";
 
 class loggedInUser extends User
 {
+    public function userExists($userID)
+    {
+        try {
+            $sql = "SELECT user_id FROM logged_in_users WHERE user_id = :id";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute([":id" => $userID]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch result
+
+            return $row !== false; // Return true if user exists
+        } catch (PDOException $error) {
+            echo "Error checking user existence: " . $error->getMessage();
+            return false;
+        }
+    }
+
     public function setLoggedInUser($userID, $userName, $user_type, $userPresence)
     {
         try {
-            $sql = "INSERT INTO logged_in_users (user_name, user_id, user_type, presence) VALUES (:username, :id, :userType, :presence)";
+            if ($this->userExists($userID)) {
+                // User exists, update their details
+                $sql = "UPDATE logged_in_users 
+                        SET user_name = :userName, 
+                            user_type = :userType, 
+                            presence = :presence 
+                        WHERE user_id = :id";
+            } else {
+                // User does not exist, insert new record
+                $sql = "INSERT INTO logged_in_users (user_id, user_name, user_type, presence) 
+                        VALUES (:id, :userName, :userType, :presence)";
+            }
+
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
-                ':username' => $userName,
-                ':id' => $userID,
-                ':userType' => $user_type,
-                ':presence' => $userPresence
+                ":id" => $userID,
+                ":userName" => $userName,
+                ":userType" => $user_type,
+                ":presence" => $userPresence
             ]);
+
             return true;
         } catch (PDOException $error) {
-            echo "Unable to set the logged-in user details..." . "<br>" . $error->getMessage();
+            echo "Unable to set the logged-in user details...<br>" . $error->getMessage();
+            return false;
         }
     }
+
 
     public function getLoggedInUsers()
     {
