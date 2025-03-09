@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/../../../vendor/autoload.php";
-require "user.model.php";
+require_once "user.model.php";
 
 
 class Doctor extends User
@@ -61,11 +61,11 @@ class Doctor extends User
     }
 
 
-    public function getUserId($id, $user_type)
+    public function getDoctorId($email)
     {
-        $sql = "SELECT user_id FROM doctor WHERE user_id = :id";
+        $sql = "SELECT user_id FROM doctor WHERE email = :email";
         $stmt = $this->Connection()->prepare($sql);
-        $stmt->execute([':id' => $id]);
+        $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         return $user ? $user['user_id'] : null; // Return ID if found, otherwise null
     }

@@ -1,8 +1,6 @@
 <?php
 session_start();
-echo "<pre>";
-print_r($_SESSION);
-echo "</pre>";
+
 require __DIR__ . '/../../../handle_error/handle_error.php';
 require __DIR__ . '/../../../../vendor/autoload.php';
 

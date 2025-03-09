@@ -20,15 +20,14 @@ function userSignIn($email, $password, $user_type)
 
         // Determine the user
         if ($user_type === "patient") {
-            //For the patient  -- check the user type from the database
+            //Patient
             $patient = new Patient;
-
             if ($patient->authenticatePatient($email, $password)) {
                 $userPresence = "available"; // Set the user presence to online
                 $_SESSION["patient-login"] = true;
-                $userID = $patient->getUserID($email, $user_type);
+                $userID = $patient->getPatientID($email);
                 $_SESSION["patientEmail"] = $email;
-                $_SESSION["logged-in-patients"][0] = $patient->getUserID($email, $user_type);
+                $_SESSION["logged-in-patients"][0] = $userID;
 
                 //LOGIN the patient
                 if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type, $userPresence)) {
@@ -37,17 +36,15 @@ function userSignIn($email, $password, $user_type)
             }
         }
 
-        //For the doctor -- check the user type from the database
         if ($user_type === "doctor") {
-            $doctor = new User;
-            if ($doctor->authenticateUser($email, $password, $user_type)) {
-                header("Location: help.php");
-                exit();
+            //Doctor
+            $doctor = new Doctor;
+            if ($doctor->authenticateDoctor($email, $password, $user_type)) {
                 $userPresence = "available"; // Set the user presence to online
                 $_SESSION['doctor-login'] = true;
-                $userID = $doctor->getUserID($email);
+                $userID = $doctor->getDoctorID($email);
                 $_SESSION["doctorEmail"] = $email;
-                $_SESSION["logged-in-doctors"][0] = $doctor->getUserID($email);
+                $_SESSION["logged-in-doctors"][0] = $userID;
 
                 //LOGIN the user
                 if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type, $userPresence)) {
@@ -85,13 +82,11 @@ function processSignUp($user, $email, $password, $fullName, $user_type)
         echo $_SESSION["verificationCode"];
 
         if ($user_type === "patient") {
-            header("Location: ../auth/verify.auth.php");
+            header("Location: ../auth/verify.auth.php"); //redirect from index.php to verify page
             exit();
-            // echo '<script type="text/javascript">window.location.href = "../auth/verify.auth.php";</script>'; //redirect from index.php to verify page
         } elseif ($user_type === "doctor") {
-            session_write_close(); // Ensure data is saved
-            header("Location: ../auth/verify.auth.php");
-            // echo '<script type="text/javascript">window.location.href = "../auth/verify.auth.php";</script>'; //redirect from index.php to verify page
+            header("Location: ../auth/verify.auth.php"); //redirect from index.php to verify page
+            exit();
         }
     }
 }
@@ -107,5 +102,3 @@ function userSignUp($email, $password, $fullName, $user_type)
         processSignUp($doctor, $email, $password, $fullName, $user_type);
     }
 }
-
-// userSignUp("kingsleyikenna2019@gmail.com", "44444", "Kingsley", "patient");

@@ -86,7 +86,13 @@ class User extends Database
         $this->user_type = $user_type;
 
         try {
-            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $db_table = null;
+            if ($db_table == "patient") {
+                $db_table = "patient";
+            } else {
+                $db_table = "doctor";
+            }
+            // $db_table = ($user_type === "patient") ? "patient" : "doctor";
             $sql = "INSERT INTO {$db_table} (name, email, google_id, is_verified, verification_code, user_type) VALUES (:name, :email, :google_id, :is_verified, :verification_code, :user_type)";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
@@ -147,7 +153,11 @@ class User extends Database
     public function getUserID($email, $user_type)
     {
         try {
-            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            if ($user_type == "patient") {
+                $db_table = "patient";
+            } else {
+                $db_table = "doctor";
+            }
             $sql = "SELECT user_id FROM {$db_table} WHERE email = :email";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute(['email' => $email]);
@@ -271,10 +281,11 @@ class User extends Database
 
 
     // GET the user TYPE
-    public function getUserTypeFromDB($email)
+    public function getUserTypeFromDB($email, $user_type)
     {
         try {
-            $sql = "SELECT user_type FROM users WHERE email=:email";
+            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $sql = "SELECT user_type FROM {$db_table} WHERE email=:email";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute(['email' => $email]);
             return $stmt->fetch(PDO::FETCH_ASSOC)["user_type"];
@@ -284,10 +295,11 @@ class User extends Database
     }
 
     // GET the user Details
-    public function getUserDetails($user_id)
+    public function getUserDetails($user_id, $user_type)
     {
         try {
-            $sql = "SELECT * FROM users WHERE user_id=:user_id";
+            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $sql = "SELECT * FROM {$db_table} WHERE user_id=:user_id";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([':user_id' => $user_id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -297,10 +309,11 @@ class User extends Database
     }
 
     // Get All Users
-    public function getAllUsers()
+    public function getAllUsers($user_type)
     {
         try {
-            $sql = "SELECT * FROM users";
+            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $sql = "SELECT * FROM {$db_table}";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -328,4 +341,11 @@ class User extends Database
 // // $test->setUserDetailGoogle("Kingsley", "kings@gmail.com", "5555", true, 4449, 7);
 // echo "<pre>";
 // print_r($test->getUserID("e.life.team.uk@gmail.com"));
+// echo "</pre>";
+
+
+// $test = new User;
+// echo "User ID = " . $test->getUserID("ugwukingsley2019@gmail.com", "doctor");
+// echo "<pre>";
+// print_r($test->getUserDetails(6, "doctor"));
 // echo "</pre>";

@@ -10,7 +10,7 @@ $patientEmail =  $_SESSION["patientEmail"];
 $user_id = $patient->getUserID($patientEmail, $_SESSION["user_type"]);
 $_SESSION["user_id"] = $user_id;
 echo "ID = {$_SESSION["user_id"]}";
-$username = $patient->getUserDetails($_SESSION["user_id"])['name'];
+$username = $patient->getUserDetails($user_id, $_SESSION["user_type"])["name"];
 ?>
 
 

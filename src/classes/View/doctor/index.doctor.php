@@ -8,7 +8,7 @@ $_SESSION["user_type"] = $user_type;
 
 // Check if the user is already logged in
 if (isset($_SESSION['user_id'])) {
-    echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
+    header("Location: dashboard.php");
     exit();
 } else {
     include_once __DIR__ . "/../auth/login.auth.php";
@@ -17,7 +17,7 @@ if (isset($_SESSION['user_id'])) {
         $email = $_POST["signInEmail"];
         $password = $_POST["signInPassword"];
 
-        userSignIn($email, $password, $user_type); //function to sign in
+        userSignIn($email, $password, $user_type);
     }
 
     // Sign up
@@ -26,7 +26,7 @@ if (isset($_SESSION['user_id'])) {
         $fullName = $_POST['signUpFullName'];
         $password = $_POST['signUpPassword'];
 
-        userSignUp($email, $password, $fullName, $user_type); //function to sign up
+        userSignUp($email, $password, $fullName, $user_type);
     }
 
     // Google Auth

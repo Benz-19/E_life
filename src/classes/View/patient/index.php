@@ -18,7 +18,7 @@ if (isset($_SESSION['user_id'])) {
         $email = $_POST['signInEmail'];
         $password = $_POST['signInPassword'];
 
-        userSignIn($email, $password, $user_type); //function to sign in
+        userSignIn($email, $password, $user_type);
     }
 
     // Sign up
@@ -27,7 +27,7 @@ if (isset($_SESSION['user_id'])) {
         $fullName = $_POST['signUpFullName'];
         $password = $_POST['signUpPassword'];
 
-        userSignUp($email, $password, $fullName, $user_type); //function to sign up
+        userSignUp($email, $password, $fullName, $user_type);
     }
 
     // Google Auth

@@ -35,4 +35,19 @@ class Patient extends User
             echo handle_error("Failed to authenticate user: ") . $error->getMessage();
         }
     }
+
+
+    public function getPatientID($email)
+    {
+        try {
+
+            $sql = "SELECT user_id FROM patient WHERE email = :email";
+            $stmt = $this->Connection()->prepare($sql);
+            $stmt->execute(['email' => $email]);
+            return $stmt->fetch(PDO::FETCH_ASSOC)["user_id"];
+        } catch (PDOException $error) {
+            handle_error("Failed to get the user ID");
+            echo $error->getMessage();
+        }
+    }
 }

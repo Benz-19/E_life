@@ -108,4 +108,4 @@ function sendEmail($recipientAddress, $recipientName, $subject, $body)
     }
 }
 
-sendEmail("kingsleyikenna2019@gmail.com", "Kingsley", "Test", "This is to test the email section");
+// sendEmail("kingsleyikenna2019@gmail.com", "Kingsley", "Test", "This is to test the email section");

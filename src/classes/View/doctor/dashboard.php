@@ -7,7 +7,7 @@ $user = new User; //Doctor
 $doctorEmail =  $_SESSION["doctorEmail"];
 $user_id = $user->getUserID($doctorEmail, $_SESSION["user_type"]);
 $_SESSION["user_id"] = $user_id;
-$userName = $user->getUserDetails($user_id)["name"];
+$userName = $user->getUserDetails($user_id, $_SESSION["user_type"])["name"];
 echo "ID = {$_SESSION["user_id"]}";
 ?>
 
