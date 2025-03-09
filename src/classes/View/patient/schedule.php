@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 $user = new Doctor();
-$doctors = $user->getAllUsers();
+$doctors = $user->getAllUsers("doctor"); //gets the corresponding doctors
 ?>
 
 <!DOCTYPE html>

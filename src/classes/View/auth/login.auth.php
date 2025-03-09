@@ -52,7 +52,13 @@ function userSignIn($email, $password, $user_type)
                 }
             } else {
                 $userPresence = "Offline"; // Set the user presence to offline
-                echo "<br>" . handle_error("Failed to authenticate the user");
+                echo "<br>" . handle_error("Failed to authenticate the user") . handle_error("You don't have the right to access this page...");
+                handle_error("ACCESS DENIED!");
+                echo '<script type="text/javascript"> //redirects to the patient index page
+                    setTimeout(()=>{
+                        window.location.href = "../patient/index.php";
+                    }, 7000);
+                </script>';
             }
         } else {
             echo "<br>" . handle_error("Failed to authenticate the user") . handle_error("You don't have the right to access this page...");

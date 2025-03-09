@@ -312,7 +312,7 @@ class User extends Database
     public function getAllUsers($user_type)
     {
         try {
-            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $db_table = ($user_type == "patient") ? "patient" : "doctor";
             $sql = "SELECT * FROM {$db_table}";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute();
