@@ -2,7 +2,6 @@
 session_start();
 require __DIR__ . "/../../../../vendor/autoload.php";
 include_once __DIR__ . "/../../../handle_error/handle_error.php";
-include_once __DIR__ . "/../auth/login.auth.php";
 
 $user_type = "patient"; //Default assuming the user signs in directly from the general index page
 $_SESSION["user_type"] = $user_type;
@@ -12,6 +11,8 @@ if (isset($_SESSION['user_id'])) {
     header("Location: dashboard.php");
     exit();
 } else {
+    include_once __DIR__ . "/../auth/login.auth.php";
+
     // Sign in
     if (isset($_POST['sign-in-btn'])) {
         $email = $_POST['signInEmail'];

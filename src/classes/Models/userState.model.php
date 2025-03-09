@@ -1,6 +1,6 @@
 <?php
 include_once "database.php";
-include "user.model.php";
+include_once "user.model.php";
 
 
 class loggedInUser extends User

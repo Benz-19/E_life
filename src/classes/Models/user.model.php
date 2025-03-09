@@ -16,12 +16,10 @@ class User extends Database
     static $mail_domain = array("gmail.com", "yahoo.com", "hotmail.com", "outlook.com");
 
     // get user type
-
     public function getUserType()
     {
         return $this->user_type;
     }
-    // set user type
 
     public function setUserType($user_type)
     {
@@ -48,7 +46,6 @@ class User extends Database
         if (preg_match($pattern, $this->userEmail, $matches)) {
             $domain = $matches[1];
         } else {
-            // echo "Invalid email format";
             handle_error("Invalid email format. Use a valid email address");
             return false;
         }
@@ -61,7 +58,8 @@ class User extends Database
 
 
         try {
-            $sql = "INSERT INTO users (name, email, password, user_type) VALUES (:name, :email, :password, :user_type)";
+            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $sql = "INSERT INTO {$db_table} (name, email, password, user_type) VALUES (:name, :email, :password, :user_type)";
             $stmt = $this->Connection()->prepare($sql);
 
             $stmt->execute([
@@ -70,7 +68,6 @@ class User extends Database
                 ':password' => $this->userPassword,
                 ':user_type' => $this->user_type,
             ]);
-            // echo "Insert was successful";
             return true;
         } catch (PDOException $error) {
             echo handle_error("Failed to insert: ") . $error->getMessage();
@@ -89,7 +86,8 @@ class User extends Database
         $this->user_type = $user_type;
 
         try {
-            $sql = "INSERT INTO users (name, email, google_id, is_verified, verification_code, user_type) VALUES (:name, :email, :google_id, :is_verified, :verification_code, :user_type)";
+            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $sql = "INSERT INTO {$db_table} (name, email, google_id, is_verified, verification_code, user_type) VALUES (:name, :email, :google_id, :is_verified, :verification_code, :user_type)";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
                 ':name' => $this->userName,
@@ -99,7 +97,6 @@ class User extends Database
                 ':verification_code' => $this->user_verification_code,
                 ':user_type' => $this->user_type
             ]);
-            // echo "User created successfully";
             return true;
         } catch (PDOException $error) {
             echo handle_error("Failed to create user: " . $error->getMessage());
@@ -107,10 +104,11 @@ class User extends Database
         }
     }
 
-    public function getUserByGoogleId($google_id)
+    public function getUserByGoogleId($google_id, $user_type)
     {
         try {
-            $sql = "SELECT * FROM users WHERE google_id = :google_id";
+            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $sql = "SELECT * FROM {$db_table} WHERE google_id = :google_id";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([':google_id' => $google_id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -120,10 +118,11 @@ class User extends Database
         }
     }
 
-    public function updateUserDetailGoogle($userId, $name, $email, $google_verified, $google_verification_code)
+    public function updateUserDetailGoogle($userId, $name, $email, $google_verified, $google_verification_code, $user_type)
     {
         try {
-            $sql = "UPDATE users SET name = :name, email = :email, is_verified = :is_verified, verification_code = :verification_code WHERE id = :id";
+            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $sql = "UPDATE {$db_table} SET name = :name, email = :email, is_verified = :is_verified, verification_code = :verification_code WHERE id = :id";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
                 ':name' => $name,
@@ -132,7 +131,6 @@ class User extends Database
                 ':verification_code' => $google_verification_code,
                 ':id' => $userId
             ]);
-            // echo "User updated successfully";
             return true;
         } catch (PDOException $error) {
             echo handle_error("Failed to update user: " . $error->getMessage());
@@ -146,10 +144,11 @@ class User extends Database
     }
 
     // Obtains the user ID from the Database
-    public function getUserID($email)
+    public function getUserID($email, $user_type)
     {
         try {
-            $sql = "SELECT user_id FROM users WHERE email = :email";
+            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $sql = "SELECT user_id FROM {$db_table} WHERE email = :email";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute(['email' => $email]);
             return $stmt->fetch(PDO::FETCH_ASSOC)["user_id"];
@@ -160,14 +159,15 @@ class User extends Database
     }
 
     // user authentication
-    public function authenticateUser($userEmail, $userPassword)
+    public function authenticateUser($userEmail, $userPassword, $user_type)
     {
         $this->userEmail = $userEmail;
         $this->userPassword = $userPassword;
 
 
         try {
-            $sql = "SELECT * FROM users WHERE email = :email";
+            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $sql = "SELECT * FROM {$db_table} WHERE email = :email";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
                 ':email' => $this->userEmail
@@ -233,10 +233,11 @@ class User extends Database
     }
 
     // updates the user verification code
-    public function updateUserVerificationCode($email, $verificationCode)
+    public function updateUserVerificationCode($email, $user_type, $verificationCode)
     {
         try {
-            $sql = "UPDATE users SET verification_code = :is_verified WHERE email = :email";
+            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $sql = "UPDATE {$db_table} SET verification_code = :is_verified WHERE email = :email";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
                 ':is_verified' => $verificationCode,
@@ -249,10 +250,11 @@ class User extends Database
         }
     }
 
-    public function updateUserVericationStatus($email, $status)
+    public function updateUserVericationStatus($email, $user_type, $status)
     {
         try {
-            $sql = "UPDATE users SET is_verified = :is_verified WHERE email = :email";
+            $db_table = ($user_type === "patient") ? "patient" : "doctor";
+            $sql = "UPDATE {$db_table} SET is_verified = :is_verified WHERE email = :email";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
                 'is_verified' => $status,

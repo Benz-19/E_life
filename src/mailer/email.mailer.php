@@ -84,8 +84,10 @@ function sendWithPhpMailer($recipientAddress, $recipientName, $subject, $body)
 
         $mail->send();
         echo 'Message has been sent';
-    } catch (Exception $e) {
+        return true;
+    } catch (Exception $err) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        return false;
     }
 }
 
@@ -93,15 +95,17 @@ function sendWithPhpMailer($recipientAddress, $recipientName, $subject, $body)
 // Main function to send email
 function sendEmail($recipientAddress, $recipientName, $subject, $body)
 {
-    // Try SendGrid first
-    if (sendWithMailerSend($recipientAddress, $recipientName, $subject, $body) === true) {
-        echo "Email sent using SendGrid!";
+    // Try PHPMailer first
+    if (sendWithPHPMailer($recipientAddress, $recipientName, $subject, $body)) {
+        echo "Email sent using PHPMailer!";
     } else {
-        // If SendGrid fails, fallback to PHPMailer
-        if (sendWithPHPMailer($recipientAddress, $recipientName, $subject, $body) === true) {
-            echo "Email sent using PHPMailer!";
+        // If PHPMailer fails, fallback to SendGrid
+        if (sendWithMailerSend($recipientAddress, $recipientName, $subject, $body) === true) {
+            echo "Email sent using SendGrid!";
         } else {
             echo "<br>Failed to send email with both SendGrid and PHPMailer.";
         }
     }
 }
+
+sendEmail("kingsleyikenna2019@gmail.com", "Kingsley", "Test", "This is to test the email section");

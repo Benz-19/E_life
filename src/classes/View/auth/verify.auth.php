@@ -1,9 +1,8 @@
 <?php
-
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
+session_start();
+echo "<pre>";
+print_r($_SESSION);
+echo "</pre>";
 require __DIR__ . '/../../../handle_error/handle_error.php';
 require __DIR__ . '/../../../../vendor/autoload.php';
 
@@ -11,7 +10,21 @@ if (isset($_POST['submit_code'])) {
 
     $inputCode = $_POST['verification_code'];
 
-    if (password_verify($inputCode, $_SESSION['verificationCode'])) {
+    function processUser($user, $fullName, $email, $password, $user_type)
+    {
+
+        if ($user->createUserDetail($fullName, $email, $password, $user_type)) {
+            $user->updateUserVerificationCode($email, $user_type, $_SESSION['verificationCode']);
+            $user->updateUserVericationStatus($email, $user_type, 1);
+            redirect_message("redirecting you to the login page...");
+            return true;
+        } else {
+            echo "<br>" . handle_error("Failed to store your details...") . handle_error("Try again!");
+            return false;
+        }
+    }
+
+    if (password_verify($inputCode, $_SESSION["verificationCode"])) {
         echo success_message("Verification successful");
 
         $fullName = $_SESSION['fullName'];
@@ -19,28 +32,26 @@ if (isset($_POST['submit_code'])) {
         $password = $_SESSION['password'];
         $user_type = $_SESSION['userType'];
 
-        $user = new User;
-
-        if ($user->createUserDetail($fullName, $email, $password, $user_type)) {
-            $user->updateUserVerificationCode($email, $_SESSION['verificationCode']);
-            $user->updateUserVericationStatus($email, 1);
-            redirect_message("redirecting you to the login page...");
-
-            if ($user_type === "patient") {
+        // Verify patient
+        if ($user_type === "patient") {
+            $patient = new Patient;
+            if (processUser($patient, $fullName, $email, $password, $user_type)) {
                 echo '<script type="text/javascript">
                 setTimeout(()=>{
                     window.location.href = "../../../../public/index.php";
                 }, 10000);
                 </script>';
-            } elseif ($user_type === "doctor") {
+            }
+        } elseif ($user_type === "doctor") { // Verify doctor
+
+            $doctor = new Doctor;
+            if (processUser($doctor, $fullName, $email, $password, $user_type)) {
                 echo '<script type="text/javascript">
                 setTimeout(()=>{
                     window.location.href = "../doctor/index.doctor.php";
                 }, 10000);
                 </script>';
             }
-        } else {
-            echo "<br>" . handle_error("Failed to store your details...") . handle_error("Try again!");
         }
     } else {
         handle_error("Invalid verification code...<br>Terminating verification process");
@@ -91,7 +102,7 @@ if (isset($_POST['submit_code'])) {
             <span class="dot animate-pulse bg-blue-600 rounded-full h-2 w-2 mx-1"></span>
         </div>
     </div>
-    <form action="" method="post">
+    <form action="" method="POST">
         <div id="form-container" class="hidden flex flex-col items-center justify-center min-h-screen bg-gray-100">
             <div class="bg-white shadow-md rounded-lg p-8 transform -translate-x-full transition-transform duration-700" id="verification-form">
                 <h1 class="text-xl font-semibold mb-6 text-center">Enter the Verification Code Sent To Your Email</h1>

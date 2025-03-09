@@ -1,7 +1,9 @@
 <?php
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+
 
 include_once __DIR__ . '/../../../handle_error/handle_error.php';
 include_once __DIR__ . '/../../Models/userState.model.php';
@@ -24,9 +26,9 @@ function userSignIn($email, $password, $user_type)
             if ($patient->authenticatePatient($email, $password)) {
                 $userPresence = "available"; // Set the user presence to online
                 $_SESSION["patient-login"] = true;
-                $userID = $patient->getUserID($email);
+                $userID = $patient->getUserID($email, $user_type);
                 $_SESSION["patientEmail"] = $email;
-                $_SESSION["logged-in-patients"][0] = $patient->getUserID($email);
+                $_SESSION["logged-in-patients"][0] = $patient->getUserID($email, $user_type);
 
                 //LOGIN the patient
                 if ($isLoggedIn->setLoggedInUser($userID, $email, $user_type, $userPresence)) {
@@ -37,8 +39,10 @@ function userSignIn($email, $password, $user_type)
 
         //For the doctor -- check the user type from the database
         if ($user_type === "doctor") {
-            $doctor = new Doctor;
-            if ($doctor->authenticateDoctor($email, $password)) {
+            $doctor = new User;
+            if ($doctor->authenticateUser($email, $password, $user_type)) {
+                header("Location: help.php");
+                exit();
                 $userPresence = "available"; // Set the user presence to online
                 $_SESSION['doctor-login'] = true;
                 $userID = $doctor->getUserID($email);
@@ -71,19 +75,23 @@ function processSignUp($user, $email, $password, $fullName, $user_type)
         echo "Ensure all fields are filled!";
     } else {
         $user->verifyUserEmail($fullName, $email);
-        $_SESSION['verificationCode'] = $user->getEmailVerificationCode();
-
-        $_SESSION['currentUser'] = $user;
+        $_SESSION["verificationCode"] = $user->getEmailVerificationCode();
 
         $_SESSION['fullName'] = $fullName;
         $_SESSION['email'] = $email;
         $_SESSION['password'] = $password;
         $_SESSION['userType'] = $user_type;
 
+        echo $_SESSION["verificationCode"];
+
         if ($user_type === "patient") {
-            echo '<script type="text/javascript">window.location.href = "../src/classes/View/auth/verify.auth.php";</script>'; //redirect from index.php to verify page
+            header("Location: ../auth/verify.auth.php");
+            exit();
+            // echo '<script type="text/javascript">window.location.href = "../auth/verify.auth.php";</script>'; //redirect from index.php to verify page
         } elseif ($user_type === "doctor") {
-            echo '<script type="text/javascript">window.location.href = "../auth/verify.auth.php";</script>'; //redirect from index.php to verify page
+            session_write_close(); // Ensure data is saved
+            header("Location: ../auth/verify.auth.php");
+            // echo '<script type="text/javascript">window.location.href = "../auth/verify.auth.php";</script>'; //redirect from index.php to verify page
         }
     }
 }
@@ -99,3 +107,5 @@ function userSignUp($email, $password, $fullName, $user_type)
         processSignUp($doctor, $email, $password, $fullName, $user_type);
     }
 }
+
+// userSignUp("kingsleyikenna2019@gmail.com", "44444", "Kingsley", "patient");

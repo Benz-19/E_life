@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 $doctor = new Doctor();
 $doctor_email = $doctor->getUserDetails($_SESSION['user_id'])['email'];
-$schedules = $doctor->getSentSchedules($_SESSION['user_id']);
+$schedules = $doctor->getSentSchedules($_SESSION['user_id'], $_SESSION["user_type"]);
 ?>
 
 <!DOCTYPE html>

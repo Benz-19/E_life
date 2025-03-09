@@ -11,7 +11,7 @@ if (!$_SESSION["doctor-login"]) {
     $LoggedInUser = new loggedInUser;
     $chat = new ChatModel;
 
-    $doctorID =  $user->getUserID($_SESSION["doctorEmail"]);
+    $doctorID =  $user->getUserID($_SESSION["doctorEmail"], $_SESSION["user_type"]);
     $communicatingPatientID = $_GET["user_id"];
 
     echo "<script>const doctorID = {$doctorID};</script>";

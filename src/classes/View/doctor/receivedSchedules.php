@@ -2,9 +2,10 @@
 session_start();
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 $doctor = new Doctor();
+$user_type = $_SESSION["user_type"];
 $doctor_email = $doctor->getUserDetails($_SESSION['user_id'])['email'];
 $doctor_id = $doctor->getUserDetails($_SESSION['user_id'])['user_id'];
-$receivedSchedules = $doctor->getReceivedSchedules($doctor_id);
+$receivedSchedules = $doctor->getReceivedSchedules($doctor_id, $user_type);
 ?>
 
 <!DOCTYPE html>

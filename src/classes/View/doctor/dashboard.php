@@ -5,7 +5,7 @@ include_once __DIR__ . "/../../../../vendor/autoload.php";
 
 $user = new User; //Doctor
 $doctorEmail =  $_SESSION["doctorEmail"];
-$user_id = $user->getUserID($doctorEmail);
+$user_id = $user->getUserID($doctorEmail, $_SESSION["user_type"]);
 $_SESSION["user_id"] = $user_id;
 $userName = $user->getUserDetails($user_id)["name"];
 echo "ID = {$_SESSION["user_id"]}";

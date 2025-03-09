@@ -1,7 +1,6 @@
 <?php
 session_start();
 require __DIR__ . "/../../../../vendor/autoload.php";
-include_once __DIR__ . "/../auth/login.auth.php";
 
 $user_type = "doctor";
 
@@ -12,6 +11,7 @@ if (isset($_SESSION['user_id'])) {
     echo '<script type="text/javascript">window.location.href = "dashboard.php";</script>';
     exit();
 } else {
+    include_once __DIR__ . "/../auth/login.auth.php";
     // Sign in
     if (isset($_POST["sign-in-btn"])) {
         $email = $_POST["signInEmail"];

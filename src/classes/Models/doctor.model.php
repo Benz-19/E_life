@@ -61,9 +61,9 @@ class Doctor extends User
     }
 
 
-    public function getUserId($id)
+    public function getUserId($id, $user_type)
     {
-        $sql = "SELECT user_id FROM users WHERE user_id = :id";
+        $sql = "SELECT user_id FROM doctor WHERE user_id = :id";
         $stmt = $this->Connection()->prepare($sql);
         $stmt->execute([':id' => $id]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -71,19 +71,19 @@ class Doctor extends User
     }
 
 
-    public function getReceivedSchedules($userId)
+    public function getReceivedSchedules($userId, $user_type)
     {
         $sql = "SELECT * FROM appointment WHERE doctor_id = ?";
         $stmt = $this->Connection()->prepare($sql);
-        $stmt->execute([$this->getUserId($userId)]);
+        $stmt->execute([$this->getUserId($userId, $user_type)]);
         return $stmt->fetchAll();
     }
 
-    public function getSentSchedules($Id)
+    public function getSentSchedules($Id, $user_type)
     {
         $sql = "SELECT * FROM appointment WHERE doctor_id = ?";
         $stmt = $this->Connection()->prepare($sql);
-        $stmt->execute([$this->getUserId($Id)]);
+        $stmt->execute([$this->getUserId($Id, $user_type)]);
         return $stmt->fetchAll();
     }
 }

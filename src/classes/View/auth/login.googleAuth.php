@@ -29,19 +29,18 @@ function getGoogleClient()
     return $client;
 }
 
-function handleGoogleUser($google_id, $name, $email, $google_verified, $google_verification_code)
+function handleGoogleUser($google_id, $name, $email, $google_verified, $google_verification_code, $user_type)
 {
     $user = new User();
     $isLoggedIn = new loggedInUser;
     $userPresence = "online";
 
-    $existingUser = $user->getUserByGoogleId($google_id);
+    $existingUser = $user->getUserByGoogleId($google_id, $user_type);
 
     if ($existingUser) {
-        $user->updateUserDetailGoogle($existingUser['user_id'], $name, $email, $google_verified, $google_verification_code);
+        $user->updateUserDetailGoogle($existingUser['user_id'], $name, $email, $google_verified, $google_verification_code, $user_type);
     } else {
         $user->createUserDetailGoogle($name, $email, $google_verified, $google_verification_code, $google_id, $_SESSION["user_type"]);
-        echo "session: " . $_SESSION["user_type"];
     }
 
     $_SESSION['user_id'] = $existingUser ? $existingUser['user_id'] : $user->getLastInsertId();
@@ -49,9 +48,9 @@ function handleGoogleUser($google_id, $name, $email, $google_verified, $google_v
     if ($_SESSION["user_type"] === "patient") {
 
         $_SESSION["patient-login"] = true;
-        $userID = $user->getUserID($email);
+        $userID = $user->getUserID($email, $user_type);
         $_SESSION["patientEmail"] = $email;
-        $_SESSION["logged-in-patients"][0] = $user->getUserID($email);
+        $_SESSION["logged-in-patients"][0] = $user->getUserID($email, $user_type);
 
         //LOGIN the patient
         if ($isLoggedIn->setLoggedInUser($userID, $email, $_SESSION["user_type"], $userPresence)) {
@@ -63,9 +62,9 @@ function handleGoogleUser($google_id, $name, $email, $google_verified, $google_v
     } elseif ($_SESSION["user_type"] === "doctor") {
 
         $_SESSION["doctor-login"] = true;
-        $userID = $user->getUserID($email);
+        $userID = $user->getUserID($email, $user_type);
         $_SESSION["doctorEmail"] = $email;
-        $_SESSION["logged-in-doctors"][0] = $user->getUserID($email);
+        $_SESSION["logged-in-doctors"][0] = $user->getUserID($email, $user_type);
 
         //LOGIN the user
         if ($isLoggedIn->setLoggedInUser($userID, $email, $_SESSION["user_type"], $userPresence)) {
@@ -104,7 +103,7 @@ if (isset($_GET['code'])) {
     $google_verification_code = $token['access_token'];
     $verification_state = $google_verified ? 'verified' : 'unverified';
 
-    handleGoogleUser($google_id, $name, $email, $google_verified, $google_verification_code);
+    handleGoogleUser($google_id, $name, $email, $google_verified, $google_verification_code, $user_type);
 } else {
     $authUrl = $client->createAuthUrl();
     echo '<script type="text/javascript">window.location.href="' . $authUrl . '";</script>';
