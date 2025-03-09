@@ -221,6 +221,8 @@ echo "ID = {$_SESSION["user_id"]}";
             });
         });
     </script>
+
+    <script src="../../../js/presence.js"></script>
 </body>
 
 </html>
