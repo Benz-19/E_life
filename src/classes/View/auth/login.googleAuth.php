@@ -1,6 +1,4 @@
 <?php
-// filepath: /C:/xampp/htdocs/E_life/src/classes/View/auth/login.auth.php
-
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
