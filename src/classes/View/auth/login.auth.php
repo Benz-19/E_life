@@ -14,7 +14,7 @@ include_once __DIR__ . '/../../../../vendor/autoload.php';
 function userSignIn($email, $password, $user_type)
 {
     if (empty($email) && empty($password)) {
-        echo "Ensure all fields are filled!";
+        handle_error("Ensure all fields are filled!");
     } else {
         $isLoggedIn = new loggedInUser;
 

@@ -69,6 +69,14 @@ if (isset($_SESSION['user_id'])) {
             cursor: pointer;
         }
 
+        .form-contain {
+            display: none;
+        }
+
+        #loader {
+            display: block;
+        }
+
         .container-main {
             position: relative;
             width: 850px;
@@ -199,7 +207,9 @@ if (isset($_SESSION['user_id'])) {
             <span class="dot animate-pulse bg-blue-600 rounded-full h-2 w-2 mx-1"></span>
             <span class="dot animate-pulse bg-blue-600 rounded-full h-2 w-2 mx-1"></span>
         </div>
+    </div>
 
+    <div class="form-contain">
         <div class="container-main" id="container-main">
             <div class="form-container sign-up-container">
                 <form action="#" method="POST">
@@ -281,17 +291,16 @@ if (isset($_SESSION['user_id'])) {
 
     </div>
 
-
     <!-- js code -->
     <script src="../../../../public/js/index.js"></script>
 
     <script>
+        const formContainer = document.querySelector(".form-contain");
+        const Loader = document.querySelector("#loader");
         setTimeout(() => {
-            document.getElementById('loader').style.display = 'none';
-            const formContainer = document.getElementById('form-container');
-            formContainer.classList.remove('hidden');
-            document.getElementById('verification-form').style.transform = 'translateX(0)';
-        }, 15000);
+            Loader.style.display = 'none';
+            formContainer.style.display = 'block';
+        }, 6000);
     </script>
     <!-- Bootstrap js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
