@@ -95,7 +95,7 @@ $username = $patient->getUserDetails($user_id, $_SESSION["user_type"])["name"];
                             <a href="#my_details" class="block px-4 py-2 text-gray-800 hover:bg-gray-200 mx-card">My Details</a>
                             <a href="#settings" class="block px-4 py-2 text-gray-800 hover:bg-gray-200 mx-card">Settings</a>
                             <a href="#contact" class="block px-4 py-2 text-gray-800 hover:bg-gray-200 mx-card">Contact Us</a>
-                            <a href="#logout" class="block px-4 py-2 text-gray-800 hover:bg-gray-200 mx-card">Logout</a>
+                            <a href="<?php echo "logout.php"; ?>" class="block px-4 py-2 text-gray-800 hover:bg-gray-200 mx-card">Logout</a>
                         </div>
                     </div>
                 </div>
