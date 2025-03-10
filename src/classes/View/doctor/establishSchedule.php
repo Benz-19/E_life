@@ -17,8 +17,8 @@ if (isset($_POST['schedule'])) {
     } else {
         $doctor = new Doctor();
         $patient = new User();
-        $sender = $doctor->getUserDetails($doctor_id)['email'];
-        $receiver = $patient->getUserDetails($patient_id)['email'];
+        $sender = $doctor->getUserDetails($doctor_id, "doctor")['email'];
+        $receiver = $patient->getUserDetails($patient_id, "patient")['email'];
         $doctor->establishSchedule($patient_id, $doctor_id, $date, $time, $details, $sender, $receiver);
         success_message('Schedule established successfully');
     }
@@ -39,7 +39,7 @@ if (isset($_POST['schedule'])) {
 <body class="bg-gray-100 p-6">
     <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
         <?php $patient = new User(); ?>
-        <?php $patient_name =  $patient->getUserDetails($_GET['id'])['name']; ?>;
+        <?php $patient_name =  $patient->getUserDetails($_GET['id'], "patient")['name']; ?>;
         <h2 class="text-2xl font-semibold text-gray-800 mb-4">Schedule Appointments with <span class="text-red-500"><?php echo $patient_name; ?> </span></h2>
 
         <!-- Appointment Form -->

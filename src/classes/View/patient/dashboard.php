@@ -9,7 +9,7 @@ $patient = new Patient; //Patient
 $patientEmail =  $_SESSION["patientEmail"];
 $user_id = $patient->getUserID($patientEmail, $_SESSION["user_type"]);
 $_SESSION["user_id"] = $user_id;
-echo "ID = {$_SESSION["user_id"]}";
+// echo "ID = {$_SESSION["user_id"]}";
 $username = $patient->getUserDetails($user_id, $_SESSION["user_type"])["name"];
 ?>
 
@@ -170,25 +170,25 @@ $username = $patient->getUserDetails($user_id, $_SESSION["user_type"])["name"];
 
         // Toggle dropdown on user image click
         userMenuToggle.addEventListener('click', function(event) {
-            userDropdown.classList.toggle('active'); // Toggle the dropdown visibility
-            userDropdown.classList.toggle('hidden'); // Toggle hidden class
-            event.stopPropagation(); // Prevent click from bubbling up to the document
+            userDropdown.classList.toggle('active');
+            userDropdown.classList.toggle('hidden');
+            event.stopPropagation();
         });
 
         // Close dropdown when clicking outside
         document.addEventListener('click', function() {
-            userDropdown.classList.remove('active'); // Hide dropdown
-            userDropdown.classList.add('hidden'); // Add hidden class to dropdown
+            userDropdown.classList.remove('active');
+            userDropdown.classList.add('hidden');
         });
 
         // Smooth scroll to features section
         const getStartedButton = document.querySelector('a[href="#features"]'); // Get the Get Started button
         getStartedButton.addEventListener('click', (event) => {
-            event.preventDefault(); // Prevent default anchor click behavior
+            event.preventDefault();
             const featuresSection = document.getElementById('features'); // Get the features section
             featuresSection.scrollIntoView({
-                behavior: 'smooth', // Smooth scroll
-                block: 'start' // Scroll to the top of the section
+                behavior: 'smooth',
+                block: 'start'
             });
         });
 

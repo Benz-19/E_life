@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 $user = new Doctor();
-$patients = $user->getAllUsers();
+$patients = $user->getAllUsers("patients");
 ?>
 
 <!DOCTYPE html>

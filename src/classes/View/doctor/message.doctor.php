@@ -20,22 +20,19 @@ if (!$_SESSION["doctor-login"]) {
     $LoggedInUser->updateLoggedInUserState("busy", $doctorID); //updates the doctor's state to 'busy' when consulting a patient
 
     $conversation_id = $chat->getConversationId($doctorID, $communicatingPatientID);
-    var_dump($conversation_id);
 
     $_SESSION["conversation_id"] = $conversation_id;
 
     if (isset($_POST["terminateComm"])) {
         echo $_GET["user_id"];
 
-        $LoggedInUser->updateLoggedInUserState("available", $doctorID); //updates the doctor's state to available
-        // $LoggedInUser->removeLoggedInUser($user->getUserID($_SESSION["doctorEmail"])); //remove the doctor's chat
-        $chat->deleteSavedConversation($_SESSION["conversation_id"]); // deletes all the conversations btw the doctor and patient when they exit the app
+        $LoggedInUser->updateLoggedInUserState("available", $doctorID);
+        $chat->deleteSavedConversation($_SESSION["conversation_id"]);
         header("Location: dashboard.php");
         exit();
     }
 }
 
-// Preventing return to the previous page.
 echo '<script type="text/javascript">
 
     var triggerReturnButton = false;

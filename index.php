@@ -9,9 +9,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            /* Make body take full viewport height */
             margin: 0;
-            /* Remove default body margin */
         }
 
         .content {
@@ -20,14 +18,11 @@
 
         .info {
             color: pink;
-            /* Or your desired color */
         }
 
         img {
             display: block;
-            /* Ensure image is a block element */
             margin: 0 auto;
-            /* Center image horizontally */
         }
     </style>
 </head>

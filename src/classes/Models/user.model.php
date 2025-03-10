@@ -333,6 +333,16 @@ class User extends Database
             handle_error("Failed to get all users: " . $error->getMessage());
         }
     }
+
+    // Logout User
+
+    public function logoutUser($user_type)
+    {
+        session_unset();
+        session_destroy();
+        $loginPage = ($user_type === "patient") ? "index.php" : "index.doctor.php";
+        header("location: {$loginPage}");
+    }
 }
 
 

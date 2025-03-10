@@ -7,7 +7,7 @@ if (!isset($_GET['id'])) {
 }
 $patient = new User();
 $patient_id = intval($_GET['id']);
-$patient_info = $patient->getUserDetails($patient_id);
+$patient_info = $patient->getUserDetails($patient_id, "patient");
 // print_r($patient_info);
 if (!$patient_info || $patient_info['user_type'] !== 'patient') {
     die("Patient not found.");
@@ -44,13 +44,13 @@ if (isset($_POST["genPrescription"])) {
         $reason = $patientPrescriptionDetails['reason'];
         $hypothesis = $patientPrescriptionDetails['hypothesis'];
 
-        $generated_image_path = generatePrescription(
-            $patient_info['name'],
-            $description,
-            $reason,
-            $hypothesis,
-            date('Y-m-d')
-        );
+        // $generated_image_path = generatePrescription(
+        //     $patient_info['name'],
+        //     $description,
+        //     $reason,
+        //     $hypothesis,
+        //     date('Y-m-d')
+        // );
 
         if ($generated_image_path) {
             echo '<img src="../../../includes/generated_prescription.png" alt="Prescription">';

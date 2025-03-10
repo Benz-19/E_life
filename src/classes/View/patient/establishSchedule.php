@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
 require_once __DIR__ . '/../../../handle_error/handle_error.php';
 
 $doctor = new Doctor();
-$doctor_name =  $doctor->getUserDetails($_GET['id'])['name'];
+$doctor_name =  $doctor->getUserDetails($_GET['id'], "doctor")['name'];
 
 if (isset($_POST['schedule'])) {
     $doctor_id = $_POST['doctor_id'];
@@ -18,9 +18,9 @@ if (isset($_POST['schedule'])) {
     } else {
         $doctor = new Doctor();
         $patient = new User();
-        $sender = $patient->getUserDetails($patient_id)['email'];
-        $receiver = $doctor->getUserDetails($doctor_id)['email'];
-        $doctor_name =  $doctor->getUserDetails($doctor_id)['name'];
+        $sender = $patient->getUserDetails($patient_id, "patient")['email'];
+        $receiver = $doctor->getUserDetails($doctor_id, "doctor")['email'];
+        $doctor_name =  $doctor->getUserDetails($doctor_id, "doctor")['name'];
         $doctor->establishSchedule($patient_id, $doctor_id, $date, $time, $details, $sender, $receiver);
         success_message('Schedule established successfully');
     }
