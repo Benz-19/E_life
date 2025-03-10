@@ -128,11 +128,13 @@ button {
     padding: 12px 45px;
     letter-spacing: 1px;
     text-transform: uppercase;
+    cursor: pointer;
 }
 
 .form-container button {
     margin-top: 17px;
     transition: 80ms ease-in;
+    cursor: pointer;
 }
 
 .overlay-container {
@@ -208,6 +210,7 @@ p {
 .overlay-panel button {
     border: none;
     background-color: transparent;
+    cursor: pointer;
 }
 
 

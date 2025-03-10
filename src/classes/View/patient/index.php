@@ -65,6 +65,10 @@ if (isset($_SESSION['user_id'])) {
 
     <link rel="stylesheet" href="../../../../public/css/index.css">
     <style>
+        button {
+            cursor: pointer;
+        }
+
         .container-main {
             position: relative;
             width: 850px;
@@ -161,7 +165,6 @@ if (isset($_SESSION['user_id'])) {
             color: #0077b5;
         }
 
-        /* Ensures the buttons do not affect the layout */
         .social-button:focus {
             outline: none;
         }
@@ -196,87 +199,87 @@ if (isset($_SESSION['user_id'])) {
             <span class="dot animate-pulse bg-blue-600 rounded-full h-2 w-2 mx-1"></span>
             <span class="dot animate-pulse bg-blue-600 rounded-full h-2 w-2 mx-1"></span>
         </div>
-    </div>
 
-    <div class="container-main" id="container-main">
-        <div class="form-container sign-up-container">
-            <form action="#" method="POST">
-                <h1>Create Account</h1>
-                <div class="social-container">
-                    <button type="submit" name="facebook-sign-up-btn" class="social-button">
-                        <i class="fab fa-facebook-f"></i>
-                    </button>
-                    <button type="submit" name="google-sign-up-btn" class="social-button">
-                        <i class="fab fa-google-plus-g"></i>
-                    </button>
-                    <button type="submit" name="linkedin-sign-up-btn" class="social-button">
-                        <i class="fab fa-linkedin-in"></i>
-                    </button>
-                </div>
-                <span>or use your email for registration</span>
-                <div class="infield">
-                    <input type="text" placeholder="Full Name" name="signUpFullName" autocomplete="off" />
-                    <label></label>
-                </div>
-                <div class="infield">
-                    <input type="email" placeholder="Email" name="signUpEmail" autocomplete="off" />
-                    <label></label>
-                </div>
-                <div class="infield">
-                    <input type="password" placeholder="Password" name="signUpPassword" autocomplete="off" />
-                    <label></label>
-                </div>
-                <button type="submit" name="sign-up-btn">Sign Up</button>
-            </form>
-        </div>
-
-        <div class="form-container sign-in-container">
-            <form action="" method="POST">
-                <h1>Sign in</h1>
-                <div class="social-container">
-                    <button type="submit" name="facebook-sign-in-btn" class="social-button">
-                        <i class="fab fa-facebook-f"></i>
-                    </button>
-                    <button type="submit" name="google-sign-in-btn" class="social-button">
-                        <a href="">
+        <div class="container-main" id="container-main">
+            <div class="form-container sign-up-container">
+                <form action="#" method="POST">
+                    <h1>Create Account</h1>
+                    <div class="social-container">
+                        <button type="submit" name="facebook-sign-up-btn" class="social-button">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button type="submit" name="google-sign-up-btn" class="social-button">
                             <i class="fab fa-google-plus-g"></i>
-                        </a>
-                    </button>
-                    <button type="submit" name="linkedin-sign-in-btn" class="social-button">
-                        <i class="fab fa-linkedin-in"></i>
-                    </button>
-                </div>
-                <span>or use your account</span>
-                <div class="infield">
-                    <input type="email" placeholder="Email" name="signInEmail" autocomplete="off">
-                    <label></label>
-                </div>
-                <div class="infield">
-                    <input type="password" placeholder="Password" name="signInPassword">
-                    <label></label>
-                </div>
-                <a href="#" class="forgot">Forgot your password?</a>
-                <button type="submit" name="sign-in-btn">Sign In</button>
-            </form>
-        </div>
-
-        <div class="overlay-container" id="overlayCon">
-            <div class="overlay">
-                <div class="overlay-panel overlay-left">
-                    <h1>Welcome Back!</h1>
-                    <p>To keep connected with us please login with your personal info</p>
-                    <button>Sign In</button>
-                </div>
-                <div class="overlay-panel overlay-right">
-                    <h1>Hello, Friend!</h1>
-                    <p>Enter your personal details and start journey with us</p>
-                    <button>Sign Up</button>
-                </div>
+                        </button>
+                        <button type="submit" name="linkedin-sign-up-btn" class="social-button">
+                            <i class="fab fa-linkedin-in"></i>
+                        </button>
+                    </div>
+                    <span>or use your email for registration</span>
+                    <div class="infield">
+                        <input type="text" placeholder="Full Name" name="signUpFullName" autocomplete="off" />
+                        <label></label>
+                    </div>
+                    <div class="infield">
+                        <input type="email" placeholder="Email" name="signUpEmail" autocomplete="off" />
+                        <label></label>
+                    </div>
+                    <div class="infield">
+                        <input type="password" placeholder="Password" name="signUpPassword" autocomplete="off" />
+                        <label></label>
+                    </div>
+                    <button type="submit" name="sign-up-btn">Sign Up</button>
+                </form>
             </div>
-            <button id="overlayBtn"></button>
-        </div>
-    </div>
 
+            <div class="form-container sign-in-container">
+                <form action="" method="POST">
+                    <h1>Sign in</h1>
+                    <div class="social-container">
+                        <button type="submit" name="facebook-sign-in-btn" class="social-button">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button type="submit" name="google-sign-in-btn" class="social-button">
+                            <a href="">
+                                <i class="fab fa-google-plus-g"></i>
+                            </a>
+                        </button>
+                        <button type="submit" name="linkedin-sign-in-btn" class="social-button">
+                            <i class="fab fa-linkedin-in"></i>
+                        </button>
+                    </div>
+                    <span>or use your account</span>
+                    <div class="infield">
+                        <input type="email" placeholder="Email" name="signInEmail" autocomplete="off">
+                        <label></label>
+                    </div>
+                    <div class="infield">
+                        <input type="password" placeholder="Password" name="signInPassword">
+                        <label></label>
+                    </div>
+                    <a href="#" class="forgot">Forgot your password?</a>
+                    <button type="submit" name="sign-in-btn">Sign In</button>
+                </form>
+            </div>
+
+            <div class="overlay-container" id="overlayCon">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Welcome Back!</h1>
+                        <p>To keep connected with us please login with your personal info</p>
+                        <button>Sign In</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>Hello, Friend!</h1>
+                        <p>Enter your personal details and start journey with us</p>
+                        <button>Sign Up</button>
+                    </div>
+                </div>
+                <button id="overlayBtn"></button>
+            </div>
+        </div>
+
+    </div>
 
 
     <!-- js code -->
@@ -288,7 +291,7 @@ if (isset($_SESSION['user_id'])) {
             const formContainer = document.getElementById('form-container');
             formContainer.classList.remove('hidden');
             document.getElementById('verification-form').style.transform = 'translateX(0)';
-        }, 5000);
+        }, 15000);
     </script>
     <!-- Bootstrap js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

@@ -2,6 +2,7 @@
 session_start();
 if (!isset($_SESSION["patient-login"])) {
     header("Location: ./index.php");
+    exit();
 }
 include_once __DIR__ . "/../../../../vendor/autoload.php";
 
@@ -9,7 +10,6 @@ $patient = new Patient; //Patient
 $patientEmail =  $_SESSION["patientEmail"];
 $user_id = $patient->getUserID($patientEmail, $_SESSION["user_type"]);
 $_SESSION["user_id"] = $user_id;
-// echo "ID = {$_SESSION["user_id"]}";
 $username = $patient->getUserDetails($user_id, $_SESSION["user_type"])["name"];
 ?>
 
