@@ -106,6 +106,7 @@ $userName = $user->getUserDetails($user_id, $_SESSION["user_type"])["name"];
                 </div>
             </div>
         </header>
+
         <section class="flex flex-col items-center justify-center flex-1 text-center pt-80 pb-48">
             <h1 class="text-5xl font-bold text-white">Welcome Doctor <?php echo $userName; ?></h1>
             <p class="mt-4 text-lg text-white">Chat, Schedule, and Manage Your Health Effortlessly.</p>
