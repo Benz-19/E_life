@@ -121,23 +121,25 @@ $username = $patient->getUserDetails($user_id, $_SESSION["user_type"])["name"];
                     <img src="../../../../public/images/send_message.png" alt="Chat" class="h-12">
                 </div>
                 <p class="mt-2 text-gray-700">Chat securely with your doctor anytime, anywhere.</p>
-                <a href="available.doc.php" class="block mt-4 px-4 py-2 bg-blue-500 text-white text-center rounded-lg hover:bg-blue-600 transition">Learn More</a>
+                <a href="available.doc.php" class="block mt-4 px-4 py-2 bg-blue-500 text-white text-center rounded-lg hover:bg-blue-600 transition">Start a session</a>
             </div>
+
             <div class="bg-white text-gray-900 p-6 rounded-lg shadow-lg hover:scale-105 transition">
                 <div class="flex justify-between items-center">
                     <h3 class="text-xl font-semibold">Appointment Scheduling</h3>
                     <img src="../../../../public/images/appointment.png" alt="Appointment" class="h-12">
                 </div>
                 <p class="mt-2 text-gray-700">Easily schedule appointments that fit your schedule.</p>
-                <a href="schedule.php" class="block mt-4 px-4 py-2 bg-blue-500 text-white text-center rounded-lg hover:bg-blue-600 transition">Learn More</a>
+                <a href="schedule.php" class="block mt-4 px-4 py-2 bg-blue-500 text-white text-center rounded-lg hover:bg-blue-600 transition">View Appointments</a>
             </div>
+
             <div class="bg-white text-gray-900 p-6 rounded-lg shadow-lg hover:scale-105 transition">
                 <div class="flex justify-between items-center">
                     <h3 class="text-xl font-semibold">Prescription Management</h3>
                     <img src="../../../../public/images/prescription.png" alt="Prescription" class="h-12">
                 </div>
                 <p class="mt-2 text-gray-700">View and manage your prescriptions conveniently.</p>
-                <a href="#" class="block mt-4 px-4 py-2 bg-blue-500 text-white text-center rounded-lg hover:bg-blue-600 transition">Learn More</a>
+                <a href="#" class="block mt-4 px-4 py-2 bg-blue-500 text-white text-center rounded-lg hover:bg-blue-600 transition">View Prescriptions</a>
             </div>
         </div>
     </section>
