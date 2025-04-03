@@ -126,7 +126,7 @@ $userName = $user->getUserDetails($user_id, $_SESSION["user_type"])["name"];
                     </div>
                     <p class="mt-2 text-gray-600">Chat securely with your doctor anytime, anywhere.</p>
                     <a href="available.pat.php">
-                        <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-300 mx-card">Learn More</button>
+                        <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-yellow-500 transition duration-300 mx-card">Start a Session</button>
                     </a>
                 </div>
 
@@ -136,8 +136,8 @@ $userName = $user->getUserDetails($user_id, $_SESSION["user_type"])["name"];
                         <img src="../../../../public/images/appointment.png" alt="Health Logo" class="h-10 mr-3">
                     </div>
                     <p class="mt-2 text-gray-600">Easily schedule appointments that fit your schedule.</p>
-                    <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-300 mx-card">
-                        <a href="<?php echo 'schedule.php'; ?>">Learn More</a>
+                    <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-yellow-500 transition duration-300 mx-card">
+                        <a href="<?php echo 'schedule.php'; ?>">Schedule an Appointment</a>
                     </button>
                 </div>
 
@@ -147,8 +147,8 @@ $userName = $user->getUserDetails($user_id, $_SESSION["user_type"])["name"];
                         <img src="../../../../public/images/prescription.png" alt="Health Logo" class="h-10 mr-3">
                     </div>
                     <p class="mt-2 text-gray-600">View and manage your prescriptions conveniently.</p>
-                    <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-300 mx-card">
-                        <a href="<?php echo 'prescription.php'; ?>">Learn More</a>
+                    <button class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-yellow-500 transition duration-300 mx-card">
+                        <a href="<?php echo 'prescription.php'; ?>">Create a Prescription</a>
                     </button>
                 </div>
             </div>

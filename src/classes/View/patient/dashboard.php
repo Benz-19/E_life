@@ -113,7 +113,7 @@ $username = $patient->getUserDetails($user_id, $_SESSION["user_type"])["name"];
     </section>
 
     <section id="features" class="container mx-auto py-16 px-6">
-        <h2 class="text-4xl font-bold text-center text-white mb-10">Features</h2>
+        <h2 class="text-4xl font-bold text-center text-white mb-10 underline">Features</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div class="bg-white text-gray-900 p-6 rounded-lg shadow-lg hover:scale-105 transition">
                 <div class="flex justify-between items-center">
