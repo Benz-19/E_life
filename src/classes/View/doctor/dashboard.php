@@ -114,8 +114,8 @@ $userName = $user->getUserDetails($user_id, $_SESSION["user_type"])["name"];
             <div class="relative w-full mt-6">
                 <a href="#features" class="mt-6 inline-block bg-blue-600 text-white font-semibold rounded-lg px-6 py-3 hover:bg-blue-500 transition duration-300 mx-card bounce">Get Started</a>
             </div>
-
         </section>
+
         <section id="features" class="container mx-auto pt-24 pb-40">
             <h2 class="text-3xl font-bold text-center text-black underline">Features</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
