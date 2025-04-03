@@ -78,7 +78,7 @@ $userName = $user->getUserDetails($user_id, $_SESSION["user_type"])["name"];
     </style>
 </head>
 
-<body>
+<body class="bg-gradient-to-br from-gray-900 to-blue-900 text-white min-h-screen">
     <div class="flex flex-col h-screen bg-gradient-to-r from-blue-600 to-gray-600">
         <header class="fixed inset-x-0 top-0 z-50 bg-white/90 shadow backdrop-blur-md">
             <div class="container mx-auto px-6 py-3 flex items-center">
@@ -116,7 +116,7 @@ $userName = $user->getUserDetails($user_id, $_SESSION["user_type"])["name"];
             </div>
         </section>
 
-        <section id="features" class="container mx-auto pt-24 pb-40">
+        <section id="features" class="container mx-auto py-16 px-6">
             <h2 class="text-3xl font-bold text-center text-black underline">Features</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-6">
                 <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform my-card">
