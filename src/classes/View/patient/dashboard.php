@@ -92,7 +92,7 @@ $username = $patient->getUserDetails($user_id, $_SESSION["user_type"])["name"];
         <div class="container mx-auto flex justify-between items-center py-4 px-6">
             <div class="flex items-center">
                 <img src="../../../../public/images/medical_logo.png" alt="Logo" class="h-10 mr-3">
-                <span class="text-xl font-semibold text-white">E-LIFE</span>
+                <span class="text-xl font-semibold text-white-700">E-LIFE</span>
             </div>
             <div class="relative">
                 <img src="../../../../public/images/user.png" alt="User" class="h-10 w-10 rounded-full cursor-pointer" id="userMenuToggle">
