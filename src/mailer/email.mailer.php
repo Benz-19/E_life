@@ -96,16 +96,16 @@ function sendWithPhpMailer($recipientAddress, $recipientName, $subject, $body)
 function sendEmail($recipientAddress, $recipientName, $subject, $body)
 {
     // Try PHPMailer first
-    // if (sendWithPHPMailer($recipientAddress, $recipientName, $subject, $body)) {
-    //     echo "Email sent using PHPMailer!";
-    // } else {
-    // If PHPMailer fails, fallback to SendGrid
-    if (sendWithMailerSend($recipientAddress, $recipientName, $subject, $body) === true) {
-        echo "Email sent using SendGrid!";
+    if (sendWithPHPMailer($recipientAddress, $recipientName, $subject, $body)) {
+        echo "Email sent using PHPMailer!";
     } else {
-        echo "<br>Failed to send email with both SendGrid and PHPMailer.";
+        // If PHPMailer fails, fallback to SendGrid
+        if (sendWithMailerSend($recipientAddress, $recipientName, $subject, $body) === true) {
+            echo "Email sent using SendGrid!";
+        } else {
+            echo "<br>Failed to send email with both SendGrid and PHPMailer.";
+        }
     }
-    // }
 }
 
-// sendEmail("kingsleyikenna2019@gmail.com", "Kingsley", "Test", "This is to test the email section");
+sendEmail("kingsleyikenna2019@gmail.com", "Kingsley", "Test", "This is to test the email section");
