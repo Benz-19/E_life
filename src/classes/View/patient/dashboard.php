@@ -112,7 +112,7 @@ $username = $patient->getUserDetails($user_id, $_SESSION["user_type"])["name"];
         <a href="#features" class="mt-6 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white text-lg font-semibold rounded-lg shadow-md transition">Get Started</a>
     </section>
 
-    <section id="features" class="container mx-auto py-10 px-6">
+    <section id="features" class="container mx-auto py-2 px-6">
         <h2 class="text-4xl font-bold text-center text-white mb-10 underline">Features</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div class="bg-white text-gray-900 p-6 rounded-lg shadow-lg hover:scale-105 transition">
