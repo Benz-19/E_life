@@ -7,8 +7,8 @@ class ChatModel extends Database
     public function getConversationId($senderId, $receiverId)
     {
         try {
-            $sql = "SELECT conversation_id FROM conversation 
-                    WHERE (sender_id = :sender_id AND receiver_id = :receiver_id) 
+            $sql = "SELECT conversation_id FROM conversation
+                    WHERE (sender_id = :sender_id AND receiver_id = :receiver_id)
                        OR (sender_id = :receiver_id AND receiver_id = :sender_id)";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
@@ -26,7 +26,7 @@ class ChatModel extends Database
     public function setConversation($conversation_id, $sender_id, $receiver_id, $message)
     {
         try {
-            $sql = "INSERT INTO conversation (conversation_id, sender_id, receiver_id, message) 
+            $sql = "INSERT INTO conversation (conversation_id, sender_id, receiver_id, message)
                     VALUES (:conversation_id, :sender_id, :receiver_id, :message)";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
@@ -45,7 +45,7 @@ class ChatModel extends Database
     public function startConversation($conversation_id, $sender_id, $receiver_id, $message)
     {
         try {
-            $sql = "INSERT INTO conversation (conversation_id, sender_id, receiver_id, message) 
+            $sql = "INSERT INTO conversation (conversation_id, sender_id, receiver_id, message)
                     VALUES (:conversation_id, :sender_id, :receiver_id, :message)";
             $stmt = $this->Connection()->prepare($sql);
             $stmt->execute([
@@ -80,7 +80,7 @@ class ChatModel extends Database
     public function getMessages($doctor_id, $patient_id)
     {
         try {
-            $query = "SELECT * FROM messages 
+            $query = "SELECT * FROM messages
                       WHERE (sender_id = :doctor_id AND recipient_id = :patient_id)
                          OR (sender_id = :patient_id AND recipient_id = :doctor_id)
                       ORDER BY created_at ASC";
